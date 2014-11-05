@@ -17,8 +17,31 @@ However, the files in ``~/.recoll/`` have a lot of information about the status 
   Its modification time is the time when recollindex started or stopped running.
 - The file ``~/.recoll/idxstatus.txt`` shows the progress and current file.
   It be used to compute percent completion.
-  Its modification time is the last successful update of recollindex.
-  (This may not be the current time if recollindex gets stuck.)
+  Its modification time is the last successful update of ``recollindex``.
+  (This may not be the current time if ``recollindex`` gets stuck.)
+
+  Values in ``idxstatus``:
+
+  ``phase`` == ``DblxStatus``::
+  
+      0 = DBIXS_NONE
+      1 = DBIXS_FILES
+      2 = DBIXS_PURGE
+      3 = DBIXS_STEMDB
+      4 = DBIXS_CLOSING
+      5 = DBIXS_MONITOR
+      6 = DBIXS_DONE
+
+  http://fossies.org/dox/recoll-1.19.14/classDbIxStatus.html#ab4c35685f98ff539b71c21784f7c2951
+
+  ``docsdone`` = Documents actually updated
+
+  ``filesdone`` = Files tested (updated or not)
+
+  ``dbtotdocs`` = Doc count in index at start
+
+  http://fossies.org/dox/recoll-1.19.14/indexer_8h_source.html
+
 - The file ``~/.recoll/xapiandb/flintlock`` seems to be always empty.
   Its modification time is the time when ``recollindex`` started running.
 - The file ``~/.recoll/history`` gives the query history.
