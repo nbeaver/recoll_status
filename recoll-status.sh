@@ -37,6 +37,9 @@ function status_running {
 	printf ' recollindex has been running for '
 	print_duration "$secs_since_start"
 	printf '\n'
+	local script_dir="$(dirname $0)"
+	python $script_dir/parse-idxstatus.py
+	#python ./parse-idxstatus.py
 }
 
 function status_not_running {
@@ -46,15 +49,12 @@ function status_not_running {
 	local secs_now=$(date +%s)
 	local secs_since_last_index=$(($secs_now - $secs_last_index))
 	echo " recollindex was last started on $date_last_index"
-	printf " duration since last run: "
+	printf " duration since last time recollindex started: "
 	print_duration "$secs_since_last_index"
 	printf '\n'
 }
 
-status_running
-status_not_running
-
-if [ ! $(type recoll) ]
+if ! type recoll > /dev/null
 then
 	echo 'Command `recoll` not found. Is recoll installed?'
 	exit 1
@@ -66,13 +66,24 @@ then
 	exit 1
 fi
 
-if [ -s ~/.recoll/index.pid ]
+pid_file="$HOME/.recoll/index.pid"
+if [ -s "$pid_file" ]
 then
-	status_running
+	recoll_pid=$(cat "$pid_file")
+	if ps -p $recoll_pid > /dev/null
+	then
+		status_running
+	else
+		echo "WARNING: ~/.recoll/index.pid is $recoll_pid but no process with that PID is running."
+		status_not_running
+		exit 1
+	fi
+
 else
 	status_not_running
 fi
 
+printf '\n'
 status_query
 
 # DONE: recollindex has been running for # minutes.
