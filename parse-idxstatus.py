@@ -36,5 +36,6 @@ with open(idxstatus_path) as db_status:
 
 # The number of files to index will probably be different than the number of initial files,
 # but by assuming that they're the same, we can guess the percent completion.
-guess_percent_complete = 100*float(files_indexed)/float(num_initial_files)
-print "Approximate percent completion:", "{:g}%".format(guess_percent_complete)
+if files_indexed and num_initial_files:
+    guess_percent_complete = 100*float(files_indexed)/float(num_initial_files)
+    print "Approximate percent completion:", "{:g}%".format(guess_percent_complete)
