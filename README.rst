@@ -7,10 +7,16 @@ Script to check status of ``recoll``
 :Author: Nathaniel Beaver
 :Copyright: This document has been placed in the public domain.
 
-`Recoll`_ currently provides no convenient command to report its status during indexing.
-However, the files in ``~/.recoll/`` have a lot of information about the status of the database.
+`Recoll`_ currently provides no convenient `command to report its status`_ during indexing.
+However, the files in ``~/.recoll/`` have a lot of information about the status of the database,
+though it is somewhat inconvenient to interpret this information.
+To make this easier,
+this repository has a combination shell/python script to give information about how long it's been since the last index,
+if a ``recollindex`` process is running and, if so,
+what it is doing and how far a long it is.
 
 .. _Recoll: http://www.lesbonscomptes.com/recoll/
+.. _command to report its status: https://bitbucket.org/medoc/recoll/issue/154/show-status-of-how-many-documents-are-not
 
 - If ``~/.recoll/index.pid`` is not an empty file, then recollindex is running.
   This process id can be used for looking up the process as well.
