@@ -8,12 +8,12 @@ Script to check status of ``recoll``
 :Copyright: This document has been placed in the public domain.
 
 `Recoll`_ currently provides no convenient `command to report its status`_ during indexing.
-However, the files in ``~/.recoll/`` have a lot of information about the status of the database,
+However, the files in ``~/.recoll/`` have a lot of information about the status of the database and the ``recollindex`` process,
 though it is somewhat inconvenient to interpret this information.
-To make this easier,
+To make it easier,
 this repository has a combination shell/python script to give information about how long it's been since the last index,
 if a ``recollindex`` process is running and, if so,
-what it is doing and how far a long it is.
+what it is doing and how far along it is.
 
 .. _Recoll: http://www.lesbonscomptes.com/recoll/
 .. _command to report its status: https://bitbucket.org/medoc/recoll/issue/154/show-status-of-how-many-documents-are-not
@@ -56,7 +56,7 @@ what it is doing and how far a long it is.
 Thus:
 
 - To find the time when indexing started, look at ``flintlock``
-- To find the time when indexing was halted, look at ``index.pid``.
+- To find the time when indexing was halted, look at ``index.pid`` (unless it's an empty file).
 - To find the time when indexing last successfully indexed a file, look at ``idxstatus.txt``.
 - To find the time when indexing succesfully completed -- impossible?
 - To find the time when a query last ran, look at ``history``.
