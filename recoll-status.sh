@@ -37,9 +37,9 @@ function status_running {
 	printf ' recollindex has been running for '
 	print_duration "$secs_since_start"
 	printf '\n'
-	local script_dir="$(dirname $0)"
-	python $script_dir/parse-idxstatus.py
-	#python ./parse-idxstatus.py
+	local this_script_path="$(readlink --canonicalize "$0")"
+	local script_dir="$(dirname "$this_script_path")"
+	python "$script_dir/parse-idxstatus.py"
 }
 
 function status_not_running {
