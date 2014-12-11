@@ -30,12 +30,6 @@ with open(idxstatus_path) as db_status:
             num_initial_files = int(val)
         elif key == 'fn':
             if status == '1':
-                print 'Indexing file:', val
+                print 'Indexing this file or directory:', val
             else:
                 print 'Not indexing files now.'
-
-# The number of files to index will probably be different than the number of initial files,
-# but by assuming that they're the same, we can guess the percent completion.
-if files_indexed and num_initial_files:
-    guess_percent_complete = 100*float(files_indexed)/float(num_initial_files)
-    print "Approximate percent completion:", "{:g}%".format(guess_percent_complete)
