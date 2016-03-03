@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__  import print_function
 import os
 
 DblxStatus = {
@@ -17,19 +18,19 @@ with open(idxstatus_path) as db_status:
     for line in db_status:
         key, val = (x.strip() for x in line.split('='))
         if key == 'phase':
-            print 'DblxStatus is',DblxStatus[val]
+            print('DblxStatus is',DblxStatus[val])
             status = val
         elif key == 'docsdone':
-            print 'Files indexed:',val
+            print('Files indexed:',val)
             files_indexed = int(val)
         elif key == 'filesdone':
-            print 'Files checked:',val
+            print('Files checked:',val)
             files_checked = int(val)
         elif key == 'dbtotdocs':
-            print 'Starting number of files:',val
+            print('Starting number of files:',val)
             num_initial_files = int(val)
         elif key == 'fn':
             if status == '1':
-                print 'Indexing this file or directory:', val
+                print('Indexing this file or directory:', val)
             else:
-                print 'Not indexing files now.'
+                print('Not indexing files now.')
