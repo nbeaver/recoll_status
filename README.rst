@@ -18,6 +18,24 @@ what it is doing and how far along it is.
 .. _Recoll: http://www.lesbonscomptes.com/recoll/
 .. _command to report its status: https://bitbucket.org/medoc/recoll/issue/154/show-status-of-how-many-documents-are-not
 
+Here is an example of the output::
+
+    $ recoll-status.sh 
+    recollindex is running.
+     recollindex has been running for 0 days 0 hours 20 minutes 14 seconds
+    DblxStatus is DBIXS_FILES
+    Files indexed: 3919
+    Files checked: 127777
+    Starting number of files: 170494
+    Indexing this file or directory: /usr/share/doc/axiom-doc/ps/v104export3d.ps
+    
+    recoll was last queried on Mon 06 Jun 2016 09:53:46 PM CDT
+     which was 0 days 2 hours 41 minutes 24 seconds ago.
+
+----------------------
+Heuristics for output.
+----------------------
+
 - If ``~/.recoll/index.pid`` is not an empty file, then recollindex is running.
   This process id can be used for looking up the process as well.
   Its modification time is the time when recollindex started or stopped running.
