@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__  import print_function
 import os
+import sys
 
 DblxStatus = {
 '0' : "DBIXS_NONE",
@@ -12,7 +13,11 @@ DblxStatus = {
 '6' : "DBIXS_DONE",
 }
 
-idxstatus_path = os.path.expanduser('~/.recoll/idxstatus.txt')
+if len(sys.argv) == 2:
+    idxstatus_path = sys.argv[1]
+else:
+    print "Usage: {} /path/to/idx-status.txt".format(sys.argv[0])
+    sys.exit(1)
 
 with open(idxstatus_path) as db_status:
     for line in db_status:

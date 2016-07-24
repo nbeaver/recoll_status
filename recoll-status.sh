@@ -39,7 +39,7 @@ function status_running {
 	printf '\n'
 	local this_script_path="$(readlink --canonicalize "$0")"
 	local script_dir="$(dirname "$this_script_path")"
-	python "$script_dir/parse-idxstatus.py"
+	python "$script_dir/parse-idxstatus.py" "$HOME/.recoll/idxstatus.txt"
 }
 
 function status_not_running {
