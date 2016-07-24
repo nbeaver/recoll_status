@@ -16,7 +16,7 @@ idxstatus_path = os.path.expanduser('~/.recoll/idxstatus.txt')
 
 with open(idxstatus_path) as db_status:
     for line in db_status:
-        key, val = (x.strip() for x in line.split('='))
+        key, val = (x.strip() for x in line.split('=', maxsplit=1))
         if key == 'phase':
             print('DblxStatus is',DblxStatus[val])
             status = val
