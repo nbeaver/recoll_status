@@ -16,7 +16,7 @@ DblxStatus = {
 if len(sys.argv) == 2:
     idxstatus_path = sys.argv[1]
 else:
-    print "Usage: {} /path/to/idx-status.txt".format(sys.argv[0])
+    sys.stderr.write("Usage: {} /path/to/idx-status.txt\n".format(sys.argv[0]))
     sys.exit(1)
 
 with open(idxstatus_path) as db_status:
