@@ -21,7 +21,7 @@ else:
 
 with open(idxstatus_path) as db_status:
     for line in db_status:
-        key, val = (x.strip() for x in line.split('=', maxsplit=1))
+        key, val = (x.strip() for x in line.split('=', 1))
         if key == 'phase':
             print('DblxStatus is',DblxStatus[val])
             status = val
