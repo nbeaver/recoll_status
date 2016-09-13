@@ -34,8 +34,11 @@ def recoll_running(recoll_dir):
     return True
 
 if __name__ == '__main__':
+
     if os.name != 'posix':
         sys.stderr.write("Error: unsupported OS: {}\n".format(os.name))
+        # No standard way to check if a process is running, unfortunately.
+        sys.exit(1)
 
     check_dir = os.path.expanduser("~/.recoll")
     recoll_running(check_dir)
