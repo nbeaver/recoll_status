@@ -4,9 +4,6 @@ import errno
 import os
 import sys
 
-if os.name != 'posix':
-    sys.stderr.write("Error: unsupported OS: {}\n".format(os.name))
-
 def recoll_running(recoll_dir):
     try:
         pid_file_path = os.path.join(recoll_dir, "index.pid")
@@ -37,5 +34,8 @@ def recoll_running(recoll_dir):
     return True
 
 if __name__ == '__main__':
+    if os.name != 'posix':
+        sys.stderr.write("Error: unsupported OS: {}\n".format(os.name))
+
     check_dir = os.path.expanduser("~/.recoll")
     recoll_running(check_dir)
