@@ -26,7 +26,7 @@ def recoll_running(recoll_dir):
         os.kill(recoll_pid, 0)
     except OSError as e:
         if e.errno == errno.ESRCH:
-            sys.stderr.write("Warning: recollindex process ID is {}, but no process with that ID is running.\n".format(recoll_pid_string))
+            sys.stderr.write("Warning: {} has process ID {}, but no process with that ID is running.\n".format(pid_file_path, recoll_pid_string))
             return False
         else:
             raise
