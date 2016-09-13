@@ -5,7 +5,7 @@ import os
 import sys
 import shutil
 
-def recoll_running(recoll_dir):
+def recollindex_running(recoll_dir):
     try:
         pid_file_path = os.path.join(recoll_dir, "index.pid")
         pid_file = open(pid_file_path)
@@ -47,5 +47,12 @@ if __name__ == '__main__':
     except AttributeError:
         pass
 
-    check_dir = os.path.expanduser("~/.recoll")
-    recoll_running(check_dir)
+    recoll_dir = os.path.expanduser("~/.recoll")
+    if not os.path.isdir(recoll_dir):
+        sys.stderr.write("Error: could not find 'recoll' directory here: {}\n".format(recoll_dir))
+        sys.exit(1)
+
+    if recollindex_running(recoll_dir):
+        sys.stdout.write("recollindex is running\n")
+    else:
+        sys.stdout.write("recollindex is not running\n")
