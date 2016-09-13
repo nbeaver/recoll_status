@@ -3,6 +3,7 @@
 import errno
 import os
 import sys
+import shutil
 
 def recoll_running(recoll_dir):
     try:
@@ -39,6 +40,12 @@ if __name__ == '__main__':
         sys.stderr.write("Error: unsupported OS: {}\n".format(os.name))
         # No standard way to check if a process is running, unfortunately.
         sys.exit(1)
+
+    try:
+        if shutil.which("recoll") is None:
+            sys.stderr.write("Warning: could not find 'recoll' executable. Is recoll installed?\n")
+    except AttributeError:
+        pass
 
     check_dir = os.path.expanduser("~/.recoll")
     recoll_running(check_dir)
