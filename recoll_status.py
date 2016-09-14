@@ -62,6 +62,7 @@ if __name__ == '__main__':
         if shutil.which("recoll") is None:
             sys.stderr.write("Warning: could not find 'recoll' executable. Is recoll installed?\n")
     except AttributeError:
+        # shutil.which() is only in python 3.3 and later.
         pass
 
     recoll_dir = os.path.expanduser("~/.recoll")
