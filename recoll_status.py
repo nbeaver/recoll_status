@@ -4,6 +4,8 @@ import errno
 import os
 import sys
 import shutil
+import datetime
+import time
 
 def recollindex_running(recoll_dir):
     try:
@@ -34,6 +36,21 @@ def recollindex_running(recoll_dir):
 
     return True
 
+def latest_query(recoll_dir, outfile):
+    history_path = os.path.join(recoll_dir, "history")
+    if os.path.isfile(history_path):
+        history_timestamp = os.path.getmtime(history_path)
+        now = datetime.datetime.now()
+        last_query = datetime.datetime.fromtimestamp(history_timestamp)
+        duration_since_last_query = now - last_query
+    else:
+        sys.stderr.write("Error: Could not find 'history' at {}\n".format(history_path))
+        return None
+
+    outfile.write("recoll was last queried on {}\n".format(last_query.ctime()))
+    outfile.write(" which was {} days, {} ago.\n".format(duration_since_last_query.days, duration_since_last_query))
+    return last_query
+
 if __name__ == '__main__':
 
     if os.name != 'posix':
@@ -56,3 +73,6 @@ if __name__ == '__main__':
         sys.stdout.write("recollindex is running\n")
     else:
         sys.stdout.write("recollindex is not running\n")
+
+    if latest_query(recoll_dir, sys.stdout) is None:
+        sys.exit(1)
