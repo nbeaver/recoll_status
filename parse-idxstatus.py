@@ -3,7 +3,7 @@ from __future__  import print_function
 import os
 import sys
 
-DblxStatus = {
+DbIxStatus = {
 '0' : "DBIXS_NONE",
 '1' : "DBIXS_FILES",
 '2' : "DBIXS_PURGE",
@@ -18,7 +18,7 @@ def check_idxstatus(idxstatus_path):
         for line in db_status:
             key, val = (x.strip() for x in line.split('=', 1))
             if key == 'phase':
-                print('DblxStatus is',DblxStatus[val])
+                print('DbIxStatus is', DbIxStatus [val])
                 status = val
             elif key == 'docsdone':
                 print('Files indexed:',val)
