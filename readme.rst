@@ -20,17 +20,16 @@ what it is doing and how far along it is.
 
 Here is an example of the output::
 
-    $ recoll-status.sh 
-    recollindex is running.
-     recollindex has been running for 0 days 0 hours 20 minutes 14 seconds
-    DblxStatus is DBIXS_FILES
-    Files indexed: 3919
-    Files checked: 127777
-    Starting number of files: 170494
-    Indexing this file or directory: /usr/share/doc/axiom-doc/ps/v104export3d.ps
-    
-    recoll was last queried on Mon 06 Jun 2016 09:53:46 PM CDT
-     which was 0 days 2 hours 41 minutes 24 seconds ago.
+    $ recoll_status.py
+    recollindex is running
+     recollindex has been running for 0 days, 0:06:08.344198
+    DbIxStatus is DBIXS_FILES
+    Files indexed: 2000
+    Files checked: 133226
+    Starting number of files: 227407
+    Indexing this file or directory: /usr/share/doc/wordplay/copyright
+    recoll database last queried on: Tue Sep 13 12:43:48 2016
+     which was 0 days, 10:28:48.988676 ago.
 
 ----------------------
 Heuristics for output.
