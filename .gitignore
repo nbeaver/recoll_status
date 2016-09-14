@@ -1,4 +1,5 @@
 config-folder-snapshots/
 *.swp
 *.swo
-README.html
+readme.html
+todo.html
