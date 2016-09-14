@@ -10,7 +10,7 @@ def recollindex_running(recoll_dir):
         pid_file_path = os.path.join(recoll_dir, "index.pid")
         pid_file = open(pid_file_path)
     except IOError:
-        sys.stderr.write("Could not find index.pid file: {}\n".format(pid_file_path))
+        sys.stderr.write("Error: Could not find 'index.pid' at {}\n".format(pid_file_path))
         raise
 
     recoll_pid_string = pid_file.read()
@@ -20,7 +20,7 @@ def recollindex_running(recoll_dir):
     try:
         recoll_pid = int(recoll_pid_string)
     except ValueError:
-        sys.stderr.write("Not a valid process ID: {}\n".format(recoll_pid_string))
+        sys.stderr.write("Error: Not a valid process ID: {}\n".format(recoll_pid_string))
         raise
 
     try:
