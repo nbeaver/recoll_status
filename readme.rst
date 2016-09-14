@@ -11,7 +11,7 @@ Script to check status of ``recoll``
 However, the files in ``~/.recoll/`` have a lot of information about the status of the database and the ``recollindex`` process,
 though it is somewhat inconvenient to interpret this information.
 To make it easier,
-this repository has a combination shell/python script to give information about how long it's been since the last index,
+this repository provides a python script to give information about how long it's been since the last index,
 if a ``recollindex`` process is running and, if so,
 what it is doing and how far along it is.
 
