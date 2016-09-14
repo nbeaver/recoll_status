@@ -65,6 +65,40 @@ def since_last_run(recoll_dir):
         date_recollindex_last_started = datetime.datetime.fromtimestamp(idxstatus_timestamp)
     return date_recollindex_last_started, now
 
+def print_idxstatus(recoll_dir):
+    idxstatus_path = os.path.join(recoll_dir, "idxstatus.txt")
+    if not os.path.isfile(idxstatus_path):
+        return None
+    DbIxStatus = {
+    '0' : "DBIXS_NONE",
+    '1' : "DBIXS_FILES",
+    '2' : "DBIXS_PURGE",
+    '3' : "DBIXS_STEMDB",
+    '4' : "DBIXS_CLOSING",
+    '5' : "DBIXS_MONITOR",
+    '6' : "DBIXS_DONE",
+    }
+    with open(idxstatus_path) as db_status:
+        for line in db_status:
+            key, val = (x.strip() for x in line.split('=', 1))
+            if key == 'phase':
+                print('DbIxStatus is', DbIxStatus [val])
+                status = val
+            elif key == 'docsdone':
+                print('Files indexed:',val)
+                files_indexed = int(val)
+            elif key == 'filesdone':
+                print('Files checked:',val)
+                files_checked = int(val)
+            elif key == 'dbtotdocs':
+                print('Starting number of files:',val)
+                num_initial_files = int(val)
+            elif key == 'fn':
+                if status == '1':
+                    print('Indexing this file or directory:', val)
+                else:
+                    print('Not indexing files now.')
+
 if __name__ == '__main__':
 
     if os.name != 'posix':
@@ -89,6 +123,7 @@ if __name__ == '__main__':
         recollindex_start, then = running_time(recoll_dir)
         recollindex_elapsed_time = then - recollindex_start
         print(" recollindex has been running for {} days, {}".format(recollindex_elapsed_time.days, recollindex_elapsed_time))
+        print_idxstatus(recoll_dir)
     else:
         print("recollindex is not running")
         recollindex_last_started, then = since_last_run(recoll_dir)
