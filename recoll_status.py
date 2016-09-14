@@ -48,6 +48,22 @@ def latest_query(recoll_dir):
 
     return date_last_query, now
 
+def running_time(recoll_dir):
+    flintlock_path = os.path.join(recoll_dir, "xapiandb", "flintlock")
+    if os.path.isfile(flintlock_path):
+        flintflock_timestamp = os.path.getmtime(flintlock_path)
+        now = datetime.datetime.now()
+        date_recollindex_started = datetime.datetime.fromtimestamp(flintflock_timestamp)
+    return date_recollindex_started, now
+
+def since_last_run(recoll_dir):
+    idxstatus_path = os.path.join(recoll_dir, "idxstatus.txt")
+    if os.path.isfile(idxstatus_path):
+        idxstatus_timestamp = os.path.getmtime(idxstatus_path)
+        now = datetime.datetime.now()
+        date_recollindex_last_started = datetime.datetime.fromtimestamp(idxstatus_timestamp)
+    return date_recollindex_last_started, now
+
 if __name__ == '__main__':
 
     if os.name != 'posix':
@@ -69,13 +85,20 @@ if __name__ == '__main__':
 
     if recollindex_running(recoll_dir):
         print("recollindex is running")
+        recollindex_start, then = running_time(recoll_dir)
+        recollindex_elapsed_time = then - recollindex_start
+        print(" recollindex has been running for {} days, {}".format(recollindex_elapsed_time.days, recollindex_elapsed_time))
     else:
         print("recollindex is not running")
+        recollindex_last_started, then = since_last_run(recoll_dir)
+        time_since_last_index = then - recollindex_last_started
+	print(" recollindex was last started on {}".format(recollindex_last_started.ctime()))
+	print(" time since recollindex last started: {} days, {}".format(time_since_last_index.days, time_since_last_index))
 
     date_of_last_query, date_now = latest_query(recoll_dir)
     if date_of_last_query is None:
         sys.exit(1)
     duration_since_last_query = date_now - date_of_last_query
 
-    print("recoll was last queried on {}".format(date_of_last_query.ctime()))
+    print("recoll database last queried on: {}".format(date_of_last_query.ctime()))
     print(" which was {} days, {} ago.".format(duration_since_last_query.days, duration_since_last_query))
