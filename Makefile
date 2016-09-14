@@ -1,5 +1,5 @@
-all: README.html
-	bash recoll-status.sh
+all: readme.html
+	python recoll_status.py
 
-README.html : README.rst
-	rst2html README.rst > README.html
+readme.html : readme.rst
+	rst2html readme.rst.rst > readme.html
