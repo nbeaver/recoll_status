@@ -3,3 +3,6 @@ all: readme.html
 
 readme.html : readme.rst
 	rst2html readme.rst.rst > readme.html
+
+clean :
+	rm -f readme.html
