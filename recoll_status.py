@@ -78,26 +78,40 @@ def print_idxstatus(recoll_dir):
     '5' : "DBIXS_MONITOR",
     '6' : "DBIXS_DONE",
     }
-    with open(idxstatus_path) as db_status:
-        for line in db_status:
+    idxstatus = open(idxstatus_path, 'rb')
+    for line_bytes in idxstatus.readlines():
+        line = line_bytes.decode()
+        try:
             key, val = (x.strip() for x in line.split('=', 1))
-            if key == 'phase':
-                print('DbIxStatus is', DbIxStatus [val])
-                status = val
-            elif key == 'docsdone':
-                print('Files indexed:',val)
-                files_indexed = int(val)
-            elif key == 'filesdone':
-                print('Files checked:',val)
-                files_checked = int(val)
-            elif key == 'dbtotdocs':
-                print('Starting number of files:',val)
-                num_initial_files = int(val)
-            elif key == 'fn':
-                if status == '1':
-                    print('Indexing this file or directory:', val)
-                else:
-                    print('Not indexing files now.')
+        except ValueError:
+            sys.stderr.write("Error: cannot parse line: {}\n".format(line))
+            import tempfile
+            temp = tempfile.NamedTemporaryFile(prefix="idxstatus", delete=False)
+            sys.stderr.write("Copying {} to {}\n".format(idxstatus_path, temp.name))
+            idxstatus.seek(0)
+            temp.file.write(idxstatus.read())
+            temp.close()
+            break
+
+        if key == 'phase':
+            print('DbIxStatus is', DbIxStatus [val])
+            status = val
+        elif key == 'docsdone':
+            print('Files indexed:',val)
+            files_indexed = int(val)
+        elif key == 'filesdone':
+            print('Files checked:',val)
+            files_checked = int(val)
+        elif key == 'dbtotdocs':
+            print('Starting number of files:',val)
+            num_initial_files = int(val)
+        elif key == 'fn':
+            if status == '1':
+                print('Indexing this file or directory:', val)
+            else:
+                print('Not indexing files now.')
+
+    idxstatus.close()
 
 if __name__ == '__main__':
 
