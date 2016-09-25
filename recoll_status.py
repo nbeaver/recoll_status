@@ -130,7 +130,7 @@ if __name__ == '__main__':
 
     if recollindex_running(os.path.join(recoll_dir, "index.pid")):
         print("recollindex is running")
-        recollindex_start, then = running_time(os.path.join(recoll_dir, "xapiandb", "flintlock")
+        recollindex_start, then = running_time(os.path.join(recoll_dir, "xapiandb", "flintlock"))
         recollindex_elapsed_time = then - recollindex_start
         print(" recollindex has been running for {} days, {}".format(recollindex_elapsed_time.days, recollindex_elapsed_time))
         print_idxstatus(os.path.join(recoll_dir, "idxstatus.txt"))
