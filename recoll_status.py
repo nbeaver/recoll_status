@@ -128,8 +128,8 @@ if __name__ == '__main__':
         print("recollindex is not running")
         recollindex_last_started, then = since_last_run(recoll_dir)
         time_since_last_index = then - recollindex_last_started
-	print(" recollindex was last started on {}".format(recollindex_last_started.ctime()))
-	print(" time since recollindex last started: {} days, {}".format(time_since_last_index.days, time_since_last_index))
+        print(" recollindex was last started on {}".format(recollindex_last_started.ctime()))
+        print(" time since recollindex last started: {} days, {}".format(time_since_last_index.days, time_since_last_index))
 
     date_of_last_query, date_now = latest_query(recoll_dir)
     if date_of_last_query is None:
