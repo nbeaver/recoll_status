@@ -73,6 +73,7 @@ def print_idxstatus(idxstatus_path):
     '5' : "DBIXS_MONITOR",
     '6' : "DBIXS_DONE",
     }
+    # https://bitbucket.org/medoc/recoll/src/dabc5bae1dd7f8b5049ef021c441ffb8050cd7eb/src/index/indexer.h?at=default&fileviewer=file-view-default#indexer.h-40
     idxstatus = open(idxstatus_path, 'rb')
     for line_bytes in idxstatus.readlines():
         line = line_bytes.decode()
