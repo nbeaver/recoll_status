@@ -8,9 +8,8 @@ import shutil
 import datetime
 import time
 
-def recollindex_running(recoll_dir):
+def recollindex_running(pid_file_path):
     try:
-        pid_file_path = os.path.join(recoll_dir, "index.pid")
         pid_file = open(pid_file_path)
     except IOError:
         sys.stderr.write("Error: Could not find 'index.pid' at {}\n".format(pid_file_path))
@@ -37,8 +36,7 @@ def recollindex_running(recoll_dir):
 
     return True
 
-def latest_query(recoll_dir):
-    history_path = os.path.join(recoll_dir, "history")
+def latest_query(history_path):
     if os.path.isfile(history_path):
         history_timestamp = os.path.getmtime(history_path)
         now = datetime.datetime.now()
@@ -49,24 +47,21 @@ def latest_query(recoll_dir):
 
     return date_last_query, now
 
-def running_time(recoll_dir):
-    flintlock_path = os.path.join(recoll_dir, "xapiandb", "flintlock")
+def running_time(flintlock_path):
     if os.path.isfile(flintlock_path):
         flintflock_timestamp = os.path.getmtime(flintlock_path)
         now = datetime.datetime.now()
         date_recollindex_started = datetime.datetime.fromtimestamp(flintflock_timestamp)
     return date_recollindex_started, now
 
-def since_last_run(recoll_dir):
-    idxstatus_path = os.path.join(recoll_dir, "idxstatus.txt")
+def since_last_run(idxstatus_path):
     if os.path.isfile(idxstatus_path):
         idxstatus_timestamp = os.path.getmtime(idxstatus_path)
         now = datetime.datetime.now()
         date_recollindex_last_started = datetime.datetime.fromtimestamp(idxstatus_timestamp)
     return date_recollindex_last_started, now
 
-def print_idxstatus(recoll_dir):
-    idxstatus_path = os.path.join(recoll_dir, "idxstatus.txt")
+def print_idxstatus(idxstatus_path):
     if not os.path.isfile(idxstatus_path):
         return None
     DbIxStatus = {
@@ -132,20 +127,20 @@ if __name__ == '__main__':
         sys.stderr.write("Error: could not find 'recoll' directory here: {}\n".format(recoll_dir))
         sys.exit(1)
 
-    if recollindex_running(recoll_dir):
+    if recollindex_running(os.path.join(recoll_dir, "index.pid")):
         print("recollindex is running")
-        recollindex_start, then = running_time(recoll_dir)
+        recollindex_start, then = running_time(os.path.join(recoll_dir, "xapiandb", "flintlock")
         recollindex_elapsed_time = then - recollindex_start
         print(" recollindex has been running for {} days, {}".format(recollindex_elapsed_time.days, recollindex_elapsed_time))
-        print_idxstatus(recoll_dir)
+        print_idxstatus(os.path.join(recoll_dir, "idxstatus.txt"))
     else:
         print("recollindex is not running")
-        recollindex_last_started, then = since_last_run(recoll_dir)
+        recollindex_last_started, then = since_last_run(os.path.join(recoll_dir, "idxstatus.txt"))
         time_since_last_index = then - recollindex_last_started
         print(" recollindex was last started on {}".format(recollindex_last_started.ctime()))
         print(" time since recollindex last started: {} days, {}".format(time_since_last_index.days, time_since_last_index))
 
-    date_of_last_query, date_now = latest_query(recoll_dir)
+    date_of_last_query, date_now = latest_query(os.path.join(recoll_dir, "history"))
     if date_of_last_query is None:
         sys.exit(1)
     duration_since_last_query = date_now - date_of_last_query
