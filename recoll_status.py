@@ -65,13 +65,13 @@ def print_idxstatus(idxstatus_path):
     if not os.path.isfile(idxstatus_path):
         return None
     DbIxStatus = {
-    '0' : "DBIXS_NONE",
-    '1' : "DBIXS_FILES",
-    '2' : "DBIXS_PURGE",
-    '3' : "DBIXS_STEMDB",
-    '4' : "DBIXS_CLOSING",
-    '5' : "DBIXS_MONITOR",
-    '6' : "DBIXS_DONE",
+        '0' : "DBIXS_NONE",
+        '1' : "DBIXS_FILES",
+        '2' : "DBIXS_PURGE",
+        '3' : "DBIXS_STEMDB",
+        '4' : "DBIXS_CLOSING",
+        '5' : "DBIXS_MONITOR",
+        '6' : "DBIXS_DONE",
     }
     # https://bitbucket.org/medoc/recoll/src/dabc5bae1dd7f8b5049ef021c441ffb8050cd7eb/src/index/indexer.h?at=default&fileviewer=file-view-default#indexer.h-40
     idxstatus = open(idxstatus_path, 'rb')
