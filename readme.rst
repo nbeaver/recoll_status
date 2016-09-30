@@ -20,7 +20,7 @@ what it is doing and how far along it is.
 
 Here is an example of the output::
 
-    $ recoll_status.py
+    $ recollstatus.py
     recollindex is running
      recollindex has been running for 0 days, 0:06:08.344198
     DbIxStatus is DBIXS_FILES

@@ -1,5 +1,5 @@
 all: readme.html todo.html
-	python recoll_status.py
+	python recollstatus.py
 
 readme.html : readme.rst
 	rst2html readme.rst readme.html
