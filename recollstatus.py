@@ -132,14 +132,14 @@ if __name__ == '__main__':
         print("recollindex is running")
         recollindex_start, then = running_time(os.path.join(recoll_dir, "xapiandb", "flintlock"))
         recollindex_elapsed_time = then - recollindex_start
-        print(" recollindex has been running for {} days, {}".format(recollindex_elapsed_time.days, recollindex_elapsed_time))
+        print(" recollindex has been running for {}".format(recollindex_elapsed_time))
         print_idxstatus(os.path.join(recoll_dir, "idxstatus.txt"))
     else:
         print("recollindex is not running")
         recollindex_last_started, then = since_last_run(os.path.join(recoll_dir, "idxstatus.txt"))
         time_since_last_index = then - recollindex_last_started
         print(" recollindex was last started on {}".format(recollindex_last_started.ctime()))
-        print(" time since recollindex last started: {} days, {}".format(time_since_last_index.days, time_since_last_index))
+        print(" time since recollindex last started: {}".format(time_since_last_index))
 
     date_of_last_query, date_now = latest_query(os.path.join(recoll_dir, "history"))
     if date_of_last_query is None:
@@ -147,4 +147,4 @@ if __name__ == '__main__':
     duration_since_last_query = date_now - date_of_last_query
 
     print("recoll database last queried on: {}".format(date_of_last_query.ctime()))
-    print(" which was {} days, {} ago.".format(duration_since_last_query.days, duration_since_last_query))
+    print(" which was {} ago.".format(duration_since_last_query))
