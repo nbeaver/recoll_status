@@ -89,7 +89,7 @@ def parse_idxstatus(idxstatus_path, write_tempfiles=True):
 
     return idxstatus
 
-def print_idxstatus(idxstatus):
+def format_idxstatus(idxstatus):
     DbIxStatus = {
         '0' : "DBIXS_NONE",
         '1' : "DBIXS_FILES",
@@ -99,18 +99,23 @@ def print_idxstatus(idxstatus):
         '5' : "DBIXS_MONITOR",
         '6' : "DBIXS_DONE",
     }
+    formatted = []
     # https://bitbucket.org/medoc/recoll/src/dabc5bae1dd7f8b5049ef021c441ffb8050cd7eb/src/index/indexer.h?at=default&fileviewer=file-view-default#indexer.h-40
     try:
-        print('DbIxStatus is', DbIxStatus[idxstatus['phase']])
-        print('Files indexed:', idxstatus['docsdone'])
-        print('Files checked:', idxstatus['filesdone'])
-        print('Starting number of files:', idxstatus['dbtotdocs'])
+        formatted.append('DbIxStatus is {}'.format(DbIxStatus[idxstatus['phase']]))
+        formatted.append('Documents indexed: {}'.format(idxstatus['docsdone']))
+        formatted.append('Files checked: {}'.format(idxstatus['filesdone']))
+        formatted.append('File errors: {}'.format(idxstatus['fileerrors']))
+        formatted.append('Total files: {}'.format(idxstatus['totfiles']))
+        formatted.append('Starting number of files: {}'.format(idxstatus['dbtotdocs']))
         if idxstatus['phase'] == '1':
-            print('Indexing this file:', idxstatus['fn'])
+            formatted.append('Indexing this file: {}'.format(idxstatus['fn']))
         else:
-            print('Not indexing files now.')
-    except IndexError:
+            formatted.append('Not indexing files now.')
+    except KeyError:
         pass
+
+    return '\n'.join(formatted)
 
 if __name__ == '__main__':
 
@@ -136,7 +141,7 @@ if __name__ == '__main__':
         recollindex_start, then = running_time(os.path.join(recoll_dir, "xapiandb", "flintlock"))
         recollindex_elapsed_time = then - recollindex_start
         print(" recollindex has been running for {}".format(recollindex_elapsed_time))
-        print_idxstatus(parse_idxstatus(os.path.join(recoll_dir, "idxstatus.txt")))
+        print(format_idxstatus(parse_idxstatus(os.path.join(recoll_dir, "idxstatus.txt"))))
     else:
         print("recollindex is not running")
         recollindex_last_started, then = since_last_run(os.path.join(recoll_dir, "idxstatus.txt"))
