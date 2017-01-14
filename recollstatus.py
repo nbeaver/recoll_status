@@ -74,7 +74,7 @@ def print_idxstatus(idxstatus_path):
     # https://bitbucket.org/medoc/recoll/src/dabc5bae1dd7f8b5049ef021c441ffb8050cd7eb/src/index/indexer.h?at=default&fileviewer=file-view-default#indexer.h-40
     try:
         idxstatus = open(idxstatus_path, 'rb')
-    except FileNotFoundError:
+    except IOError:
         return None
     for line_bytes in idxstatus.readlines():
         line = line_bytes.decode()
