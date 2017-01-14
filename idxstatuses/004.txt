@@ -1,0 +1,12 @@
+phase = 1
+docsdone = 24825
+filesdone = 24755
+fileerrors = 1852
+dbtotdocs = 24825
+totfiles = 24755
+fn = /home/aaaaaaaaa/bbbbbbb/ccccccccccccccccc/ddddddddddddddddddddddd/Antoine \
+Laurent de Lavoisier, Louis-Bernard Guyton de Morveau/Annales \
+de chimie ou Recueil de memoires concernant la chimie \
+et les arts qui en dependent (322)/Annales de chimie \
+ou Recueil de memoires c - Antoine Laurent de Lavoisier, \
+Louis-Bernar.pdf
