@@ -106,7 +106,7 @@ def print_idxstatus(idxstatus):
         print('Files checked:', idxstatus['filesdone'])
         print('Starting number of files:', idxstatus['dbtotdocs'])
         if idxstatus['phase'] == '1':
-            print('Indexing this file or directory:', idxstatus['fn'])
+            print('Indexing this file:', idxstatus['fn'])
         else:
             print('Not indexing files now.')
     except IndexError:
