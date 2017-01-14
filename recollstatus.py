@@ -7,6 +7,7 @@ import sys
 import shutil
 import datetime
 import time
+import collections
 
 def recollindex_running(pid_file_path):
     try:
@@ -64,7 +65,29 @@ def since_last_run(idxstatus_path):
         date_recollindex_last_started = datetime.datetime.fromtimestamp(idxstatus_timestamp)
     return date_recollindex_last_started, now
 
-def print_idxstatus(idxstatus_path):
+def parse_idxstatus(idxstatus_path):
+
+    idxstatus = collections.OrderedDict()
+
+    with open(idxstatus_path, 'rb') as idxstatus_fp:
+        for line_bytes in idxstatus_fp.readlines():
+            line = line_bytes.decode()
+            try:
+                key, val = (x.strip() for x in line.split('=', 1))
+            except ValueError:
+                sys.stderr.write("Error: cannot parse line: {}\n".format(line))
+                import tempfile
+                temp = tempfile.NamedTemporaryFile(prefix="idxstatus", delete=False)
+                sys.stderr.write("Copying {} to {}\n".format(idxstatus_path, temp.name))
+                idxstatus_fp.seek(0)
+                temp.file.write(idxstatus_fp.read())
+                temp.close()
+                break
+            idxstatus[key] = val
+
+    return idxstatus
+
+def print_idxstatus(idxstatus):
     DbIxStatus = {
         '0' : "DBIXS_NONE",
         '1' : "DBIXS_FILES",
@@ -75,40 +98,17 @@ def print_idxstatus(idxstatus_path):
         '6' : "DBIXS_DONE",
     }
     # https://bitbucket.org/medoc/recoll/src/dabc5bae1dd7f8b5049ef021c441ffb8050cd7eb/src/index/indexer.h?at=default&fileviewer=file-view-default#indexer.h-40
-    idxstatus_fp = open(idxstatus_path, 'rb')
-    for line_bytes in idxstatus_fp.readlines():
-        line = line_bytes.decode()
-        try:
-            key, val = (x.strip() for x in line.split('=', 1))
-        except ValueError:
-            sys.stderr.write("Error: cannot parse line: {}\n".format(line))
-            import tempfile
-            temp = tempfile.NamedTemporaryFile(prefix="idxstatus", delete=False)
-            sys.stderr.write("Copying {} to {}\n".format(idxstatus_path, temp.name))
-            idxstatus_fp.seek(0)
-            temp.file.write(idxstatus_fp.read())
-            temp.close()
-            break
-
-        if key == 'phase':
-            print('DbIxStatus is', DbIxStatus [val])
-            status = val
-        elif key == 'docsdone':
-            print('Files indexed:',val)
-            files_indexed = int(val)
-        elif key == 'filesdone':
-            print('Files checked:',val)
-            files_checked = int(val)
-        elif key == 'dbtotdocs':
-            print('Starting number of files:',val)
-            num_initial_files = int(val)
-        elif key == 'fn':
-            if status == '1':
-                print('Indexing this file or directory:', val)
-            else:
-                print('Not indexing files now.')
-
-    idxstatus.close()
+    try:
+        print('DbIxStatus is', DbIxStatus[idxstatus['phase']])
+        print('Files indexed:', idxstatus['docsdone'])
+        print('Files checked:', idxstatus['filesdone'])
+        print('Starting number of files:', idxstatus['dbtotdocs'])
+        if idxstatus['phase'] == 1:
+            print('Indexing this file or directory:', idxstatus['fn'])
+        else:
+            print('Not indexing files now.')
+    except IndexError:
+        pass
 
 if __name__ == '__main__':
 
@@ -134,7 +134,7 @@ if __name__ == '__main__':
         recollindex_start, then = running_time(os.path.join(recoll_dir, "xapiandb", "flintlock"))
         recollindex_elapsed_time = then - recollindex_start
         print(" recollindex has been running for {}".format(recollindex_elapsed_time))
-        print_idxstatus(os.path.join(recoll_dir, "idxstatus.txt"))
+        print_idxstatus(parse_idxstatus(os.path.join(recoll_dir, "idxstatus.txt")))
     else:
         print("recollindex is not running")
         recollindex_last_started, then = since_last_run(os.path.join(recoll_dir, "idxstatus.txt"))
