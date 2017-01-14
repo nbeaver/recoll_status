@@ -73,10 +73,10 @@ def print_idxstatus(idxstatus_path):
     }
     # https://bitbucket.org/medoc/recoll/src/dabc5bae1dd7f8b5049ef021c441ffb8050cd7eb/src/index/indexer.h?at=default&fileviewer=file-view-default#indexer.h-40
     try:
-        idxstatus = open(idxstatus_path, 'rb')
+        idxstatus_fp = open(idxstatus_path, 'rb')
     except IOError:
         return None
-    for line_bytes in idxstatus.readlines():
+    for line_bytes in idxstatus_fp.readlines():
         line = line_bytes.decode()
         try:
             key, val = (x.strip() for x in line.split('=', 1))
@@ -85,8 +85,8 @@ def print_idxstatus(idxstatus_path):
             import tempfile
             temp = tempfile.NamedTemporaryFile(prefix="idxstatus", delete=False)
             sys.stderr.write("Copying {} to {}\n".format(idxstatus_path, temp.name))
-            idxstatus.seek(0)
-            temp.file.write(idxstatus.read())
+            idxstatus_fp.seek(0)
+            temp.file.write(idxstatus_fp.read())
             temp.close()
             break
 
