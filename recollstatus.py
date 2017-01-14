@@ -103,11 +103,11 @@ def format_idxstatus(idxstatus):
     # https://bitbucket.org/medoc/recoll/src/dabc5bae1dd7f8b5049ef021c441ffb8050cd7eb/src/index/indexer.h?at=default&fileviewer=file-view-default#indexer.h-40
     try:
         formatted.append('DbIxStatus is {}'.format(DbIxStatus[idxstatus['phase']]))
-        formatted.append('Documents indexed: {}'.format(idxstatus['docsdone']))
-        formatted.append('Files checked: {}'.format(idxstatus['filesdone']))
-        formatted.append('File errors: {}'.format(idxstatus['fileerrors']))
-        formatted.append('Total files: {}'.format(idxstatus['totfiles']))
-        formatted.append('Starting number of files: {}'.format(idxstatus['dbtotdocs']))
+        formatted.append('Documents updated: {}'.format(idxstatus['docsdone']))
+        formatted.append('Files tested: {}'.format(idxstatus['filesdone']))
+        formatted.append('Failed files: {}'.format(idxstatus['fileerrors']))
+        formatted.append('Total files in index: {}'.format(idxstatus['totfiles']))
+        formatted.append('Starting number of indexed documents: {}'.format(idxstatus['dbtotdocs']))
         if idxstatus['phase'] == '1':
             formatted.append('Indexing this file: {}'.format(idxstatus['fn']))
         else:

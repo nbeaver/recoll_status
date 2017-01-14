@@ -49,7 +49,7 @@ Heuristics for output.
 
   Values in ``idxstatus``:
 
-  ``phase`` == ``DblxStatus``::
+  ``phase`` == ``DbIxStatus``::
   
       0 = DBIXS_NONE
       1 = DBIXS_FILES
@@ -59,15 +59,15 @@ Heuristics for output.
       5 = DBIXS_MONITOR
       6 = DBIXS_DONE
 
-  http://fossies.org/dox/recoll-1.19.14/classDbIxStatus.html#ab4c35685f98ff539b71c21784f7c2951
-
   ``docsdone`` = Documents actually updated
 
   ``filesdone`` = Files tested (updated or not)
 
   ``dbtotdocs`` = Doc count in index at start
 
-  http://fossies.org/dox/recoll-1.19.14/indexer_8h_source.html
+  ``totfiles`` = Total files in index.
+
+  https://bitbucket.org/medoc/recoll/src/3b851ca464ae9a7698c16e448d8c1caac1b9b646/src/index/indexer.h
 
 - The file ``~/.recoll/xapiandb/flintlock`` seems to be always empty.
   Its modification time is the time when ``recollindex`` started running.
