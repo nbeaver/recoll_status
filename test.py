@@ -4,12 +4,13 @@ import recollstatus
 import os
 
 class recollstatusTest(unittest.TestCase):
-    def test_parse_idxstatus(self):
+    def test_parsing(self):
         dirname = 'idxstatuses'
         for filename in os.listdir(dirname):
             filepath = os.path.join(dirname, filename)
             if os.path.isfile(filepath):
-                recollstatus.parse_idxstatus(filepath, write_tempfiles=False)
+                parsed = recollstatus.parse_idxstatus(filepath, write_tempfiles=False)
+                recollstatus.format_idxstatus(parsed)
 
 if __name__ == '__main__':
     unittest.main()
