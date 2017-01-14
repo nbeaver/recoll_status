@@ -46,7 +46,6 @@ def latest_query(history_path):
         history_timestamp = os.path.getmtime(history_path)
         date_last_query = datetime.datetime.fromtimestamp(history_timestamp)
     else:
-        sys.stderr.write("Warning: Could not find 'history' at {}\n".format(history_path))
         return None, now
 
     return date_last_query, now
@@ -143,9 +142,8 @@ if __name__ == '__main__':
         print(" time since recollindex last started: {}".format(time_since_last_index))
 
     date_of_last_query, date_now = latest_query(os.path.join(recoll_dir, "history"))
-    if date_of_last_query is None:
-        sys.exit(1)
-    duration_since_last_query = date_now - date_of_last_query
+    if date_of_last_query:
+        duration_since_last_query = date_now - date_of_last_query
 
-    print("recoll database last queried on: {}".format(date_of_last_query.ctime()))
-    print(" which was {} ago.".format(duration_since_last_query))
+        print("recoll database last queried on: {}".format(date_of_last_query.ctime()))
+        print(" which was {} ago.".format(duration_since_last_query))
