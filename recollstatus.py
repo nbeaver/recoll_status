@@ -41,12 +41,12 @@ def recollindex_running(pid_file_path):
     return True
 
 def latest_query(history_path):
+    now = datetime.datetime.now()
     if os.path.isfile(history_path):
         history_timestamp = os.path.getmtime(history_path)
-        now = datetime.datetime.now()
         date_last_query = datetime.datetime.fromtimestamp(history_timestamp)
     else:
-        sys.stderr.write("Error: Could not find 'history' at {}\n".format(history_path))
+        sys.stderr.write("Warning: Could not find 'history' at {}\n".format(history_path))
         return None, now
 
     return date_last_query, now
