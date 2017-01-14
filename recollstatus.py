@@ -12,7 +12,7 @@ def recollindex_running(pid_file_path):
     try:
         pid_file = open(pid_file_path)
     except IOError:
-        sys.stderr.write("Error: Could not find 'index.pid' at {}\n".format(pid_file_path))
+        sys.stderr.write("Error: Could not open 'index.pid' at {}\n".format(pid_file_path))
         raise
 
     recoll_pid_string = pid_file.read()
