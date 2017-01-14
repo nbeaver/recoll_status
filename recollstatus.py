@@ -62,8 +62,6 @@ def since_last_run(idxstatus_path):
     return date_recollindex_last_started, now
 
 def print_idxstatus(idxstatus_path):
-    if not os.path.isfile(idxstatus_path):
-        return None
     DbIxStatus = {
         '0' : "DBIXS_NONE",
         '1' : "DBIXS_FILES",
@@ -74,7 +72,10 @@ def print_idxstatus(idxstatus_path):
         '6' : "DBIXS_DONE",
     }
     # https://bitbucket.org/medoc/recoll/src/dabc5bae1dd7f8b5049ef021c441ffb8050cd7eb/src/index/indexer.h?at=default&fileviewer=file-view-default#indexer.h-40
-    idxstatus = open(idxstatus_path, 'rb')
+    try:
+        idxstatus = open(idxstatus_path, 'rb')
+    except FileNotFoundError:
+        return None
     for line_bytes in idxstatus.readlines():
         line = line_bytes.decode()
         try:
