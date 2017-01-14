@@ -7,8 +7,12 @@ Script to check status of ``recoll``
 :Author: Nathaniel Beaver
 :Copyright: This document has been placed in the public domain.
 
-`Recoll`_ currently provides no convenient `command to report its status`_ during indexing.
-However, the files in ``~/.recoll/`` have a lot of information about the status of the database and the ``recollindex`` process,
+The GUI for `Recoll`_ reports indexing progress that looks like this::
+
+    Indexing in progress: Updating (42252 docs/38419 files/2166 errors/38419 tot files)
+
+However, there is no convenient `command to report its status`_ during indexing.
+The files in ``~/.recoll/`` have a lot of information about the status of the database and the ``recollindex`` process,
 though it is somewhat inconvenient to interpret this information.
 To make it easier,
 this repository provides a python script to give information about how long it's been since the last index,
