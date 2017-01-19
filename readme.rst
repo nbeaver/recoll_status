@@ -81,3 +81,11 @@ Thus:
 - To find the time when indexing last successfully indexed a file, look at ``idxstatus.txt``.
 - To find the time when indexing succesfully completed -- impossible?
 - To find the time when a query last ran, look at ``history``.
+
+-------
+License
+-------
+
+This project is licensed under the terms of the `MIT license`_.
+
+.. _MIT license: LICENSE.txt
