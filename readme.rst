@@ -43,7 +43,6 @@ Heuristics for output.
   This process id can be used for looking up the process as well.
   Its modification time is the time when recollindex started or stopped running.
 - The file ``~/.recoll/idxstatus.txt`` shows the progress and current file.
-  It be used to compute percent completion.
   Its modification time is the last successful update of ``recollindex``.
   (This may not be the current time if ``recollindex`` gets stuck.)
 
