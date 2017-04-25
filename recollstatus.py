@@ -101,19 +101,20 @@ def format_idxstatus(idxstatus):
     }
     formatted = []
     # https://bitbucket.org/medoc/recoll/src/dabc5bae1dd7f8b5049ef021c441ffb8050cd7eb/src/index/indexer.h?at=default&fileviewer=file-view-default#indexer.h-40
-    try:
-        formatted.append('DbIxStatus is {}'.format(DbIxStatus[idxstatus['phase']]))
-        formatted.append('Documents updated: {}'.format(idxstatus['docsdone']))
-        formatted.append('Files tested: {}'.format(idxstatus['filesdone']))
-        formatted.append('Failed files: {}'.format(idxstatus['fileerrors']))
-        formatted.append('Total files in index: {}'.format(idxstatus['totfiles']))
-        formatted.append('Starting number of indexed documents: {}'.format(idxstatus['dbtotdocs']))
-        if idxstatus['phase'] == '1':
-            formatted.append('Indexing this file: {}'.format(idxstatus['fn']))
-        else:
-            formatted.append('Not indexing files now.')
-    except KeyError:
-        pass
+    descriptors = collections.OrderedDict()
+    descriptors['phase'] = 'DbIxStatus is'
+    descriptors['docsdone'] = 'Documents updated:'
+    descriptors['filesdone'] = 'Files tested:'
+    descriptors['filerrors'] = 'Failed files:'
+    descriptors['totfiles'] = 'Total files in index:'
+    descriptors['dbtotdocs'] = 'Starting number of indexed documents:'
+    for field, description in descriptors.items():
+        if field in idxstatus:
+            formatted.append('{} {}'.format(description, idxstatus[field]))
+    if idxstatus['phase'] == '1':
+        formatted.append('Indexing this file: {}'.format(idxstatus['fn']))
+    else:
+        formatted.append('Not indexing files now.')
 
     return '\n'.join(formatted)
 
