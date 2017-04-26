@@ -144,9 +144,16 @@ def recollstatus(recoll_dir):
 
     return '\n'.join(status)
 
+def readable_directory(path):
+    if not os.path.isdir(path):
+        raise argparse.ArgumentTypeError('not an existing directory: {}'.format(path))
+    if not os.access(path, os.R_OK):
+        raise argparse.ArgumentTypeError('not a readable directory: {}'.format(path))
+    return path
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Display status of recollindex.')
-    parser.add_argument('-d', '--recoll-dir', default=os.path.expanduser("~/.recoll"), help='Recoll directory')
+    parser.add_argument('-d', '--recoll-dir', type=readable_directory, default=os.path.expanduser("~/.recoll"), help='Recoll directory')
     args = parser.parse_args()
 
     try:
@@ -156,9 +163,4 @@ if __name__ == '__main__':
         # shutil.which() is only in python 3.3 and later.
         pass
 
-    recoll_dir = args.recoll_dir
-    if not os.path.isdir(recoll_dir):
-        sys.stderr.write("Error: could not find 'recoll' directory here: {}\n".format(recoll_dir))
-        sys.exit(1)
-    else:
-        print(recollstatus(recoll_dir))
+    print(recollstatus(args.recoll_dir))
