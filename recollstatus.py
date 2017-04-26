@@ -119,12 +119,6 @@ def format_idxstatus(idxstatus):
     return '\n'.join(formatted)
 
 if __name__ == '__main__':
-
-    if os.name != 'posix':
-        sys.stderr.write("Error: unsupported OS: {}\n".format(os.name))
-        # No standard way to check if a process is running, unfortunately.
-        sys.exit(1)
-
     try:
         if shutil.which("recoll") is None:
             sys.stderr.write("Warning: could not find 'recoll' executable. Is recoll installed?\n")
