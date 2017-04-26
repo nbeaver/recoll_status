@@ -120,6 +120,30 @@ def format_idxstatus(idxstatus):
 
     return '\n'.join(formatted)
 
+def recollstatus(recoll_dir):
+    status = []
+    if recollindex_running(os.path.join(recoll_dir, "index.pid")):
+        status.append("recollindex is running")
+        recollindex_start, then = running_time(os.path.join(recoll_dir, "xapiandb", "flintlock"))
+        recollindex_elapsed_time = then - recollindex_start
+        status.append(" recollindex has been running for {}".format(recollindex_elapsed_time))
+        status.append(format_idxstatus(parse_idxstatus(os.path.join(recoll_dir, "idxstatus.txt"))))
+    else:
+        status.append("recollindex is not running")
+        recollindex_last_started, then = since_last_run(os.path.join(recoll_dir, "idxstatus.txt"))
+        time_since_last_index = then - recollindex_last_started
+        status.append(" recollindex was last started on {}".format(recollindex_last_started.ctime()))
+        status.append(" time since recollindex last started: {}".format(time_since_last_index))
+
+    date_of_last_query, date_now = latest_query(os.path.join(recoll_dir, "history"))
+    if date_of_last_query:
+        duration_since_last_query = date_now - date_of_last_query
+
+        status.append("recoll database last queried on: {}".format(date_of_last_query.ctime()))
+        status.append(" which was {} ago.".format(duration_since_last_query))
+
+    return '\n'.join(status)
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Display status of recollindex.')
     parser.add_argument('-d', '--recoll-dir', default=os.path.expanduser("~/.recoll"), help='Recoll directory')
@@ -136,23 +160,5 @@ if __name__ == '__main__':
     if not os.path.isdir(recoll_dir):
         sys.stderr.write("Error: could not find 'recoll' directory here: {}\n".format(recoll_dir))
         sys.exit(1)
-
-    if recollindex_running(os.path.join(recoll_dir, "index.pid")):
-        print("recollindex is running")
-        recollindex_start, then = running_time(os.path.join(recoll_dir, "xapiandb", "flintlock"))
-        recollindex_elapsed_time = then - recollindex_start
-        print(" recollindex has been running for {}".format(recollindex_elapsed_time))
-        print(format_idxstatus(parse_idxstatus(os.path.join(recoll_dir, "idxstatus.txt"))))
     else:
-        print("recollindex is not running")
-        recollindex_last_started, then = since_last_run(os.path.join(recoll_dir, "idxstatus.txt"))
-        time_since_last_index = then - recollindex_last_started
-        print(" recollindex was last started on {}".format(recollindex_last_started.ctime()))
-        print(" time since recollindex last started: {}".format(time_since_last_index))
-
-    date_of_last_query, date_now = latest_query(os.path.join(recoll_dir, "history"))
-    if date_of_last_query:
-        duration_since_last_query = date_now - date_of_last_query
-
-        print("recoll database last queried on: {}".format(date_of_last_query.ctime()))
-        print(" which was {} ago.".format(duration_since_last_query))
+        print(recollstatus(recoll_dir))
