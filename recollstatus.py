@@ -9,14 +9,15 @@ import datetime
 import time
 import collections
 
-def recollindex_running(pid_file_path):
+def recollindex_running(pid_filepath):
+    # Example PID file path: ~/.recoll/index.pid
     try:
-        pid_file = open(pid_file_path)
+        pid_file = open(pid_filepath)
     except IOError as e:
         if e.errno == 2:
-            sys.stderr.write("Error: Could not find 'index.pid' at {}\n".format(pid_file_path))
+            sys.stderr.write("Error: Could not find 'index.pid' at {}\n".format(pid_filepath))
         else:
-            sys.stderr.write("Error: Could not open 'index.pid' at {}\n".format(pid_file_path))
+            sys.stderr.write("Error: Could not open 'index.pid' at {}\n".format(pid_filepath))
         raise
 
     recoll_pid_string = pid_file.read()
@@ -33,7 +34,7 @@ def recollindex_running(pid_file_path):
         os.kill(recoll_pid, 0)
     except OSError as e:
         if e.errno == errno.ESRCH:
-            sys.stderr.write("Warning: {} has process ID {}, but no process with that ID is running.\n".format(pid_file_path, recoll_pid_string))
+            sys.stderr.write("Warning: {} has process ID {}, but no process with that ID is running.\n".format(pid_filepath, recoll_pid_string))
             return False
         else:
             raise
