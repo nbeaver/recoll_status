@@ -1,8 +1,8 @@
 .. -*- coding: utf-8 -*-
 
-====================================
-Script to check status of ``recoll``
-====================================
+=========================================
+Script to check status of ``recollindex``
+=========================================
 
 :Author: Nathaniel Beaver
 :Copyright: This document has been placed in the public domain.
