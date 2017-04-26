@@ -8,6 +8,7 @@ import shutil
 import datetime
 import time
 import collections
+import argparse
 
 def recollindex_running(pid_filepath):
     # Example PID file path: ~/.recoll/index.pid
@@ -120,6 +121,10 @@ def format_idxstatus(idxstatus):
     return '\n'.join(formatted)
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Display status of recollindex.')
+    parser.add_argument('-d', '--recoll-dir', default=os.path.expanduser("~/.recoll"), help='Recoll directory')
+    args = parser.parse_args()
+
     try:
         if shutil.which("recoll") is None:
             sys.stderr.write("Warning: could not find 'recoll' executable. Is recoll installed?\n")
@@ -127,7 +132,7 @@ if __name__ == '__main__':
         # shutil.which() is only in python 3.3 and later.
         pass
 
-    recoll_dir = os.path.expanduser("~/.recoll")
+    recoll_dir = args.recoll_dir
     if not os.path.isdir(recoll_dir):
         sys.stderr.write("Error: could not find 'recoll' directory here: {}\n".format(recoll_dir))
         sys.exit(1)
