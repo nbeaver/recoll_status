@@ -156,7 +156,13 @@ def readable_directory(path):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Display status of recollindex.')
-    parser.add_argument('-d', '--recoll-dir', type=readable_directory, default=os.path.expanduser("~/.recoll"), help='Recoll directory')
+    parser.add_argument(
+        '-d',
+        '--recoll-dir',
+        type=readable_directory,
+        default=os.path.expanduser("~/.recoll"),
+        help='Recoll directory'
+    )
     args = parser.parse_args()
 
     try:
