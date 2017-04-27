@@ -9,6 +9,7 @@ import datetime
 import time
 import collections
 import argparse
+import logging
 
 def recollindex_running(pid_filepath):
     # Example PID file path: ~/.recoll/index.pid
@@ -16,9 +17,9 @@ def recollindex_running(pid_filepath):
         pid_file = open(pid_filepath)
     except IOError as e:
         if e.errno == 2:
-            sys.stderr.write("Error: Could not find 'index.pid' at {}\n".format(pid_filepath))
+            logging.error("Could not find 'index.pid' at {}\n".format(pid_filepath))
         else:
-            sys.stderr.write("Error: Could not open 'index.pid' at {}\n".format(pid_filepath))
+            logging.error("Could not open 'index.pid' at {}\n".format(pid_filepath))
         raise
 
     recoll_pid_string = pid_file.read()
@@ -28,14 +29,14 @@ def recollindex_running(pid_filepath):
     try:
         recoll_pid = int(recoll_pid_string)
     except ValueError:
-        sys.stderr.write("Error: Not a valid process ID: {}\n".format(recoll_pid_string))
+        logging.error("Not a valid process ID: {}\n".format(recoll_pid_string))
         raise
 
     try:
         os.kill(recoll_pid, 0)
     except OSError as e:
         if e.errno == errno.ESRCH:
-            sys.stderr.write("Warning: {} has process ID {}, but no process with that ID is running.\n".format(pid_filepath, recoll_pid_string))
+            logging.warning("{} has process ID {}, but no process with that ID is running.\n".format(pid_filepath, recoll_pid_string))
             return False
         else:
             raise
@@ -77,11 +78,13 @@ def parse_idxstatus(idxstatus_path, write_tempfiles=True):
         try:
             key, val = (x.strip() for x in line.split('=', 1))
         except ValueError:
-            sys.stderr.write("Error: cannot parse line: {}\n".format(line))
+            logging.error("Cannot parse line: {}\n".format(line))
             if write_tempfiles:
+                # If the parsing the idxstatus file filas,
+                # keep a copy of it for later debugging.
                 import tempfile
                 temp = tempfile.NamedTemporaryFile(prefix="idxstatus", delete=False)
-                sys.stderr.write("Copying {} to {}\n".format(idxstatus_path, temp.name))
+                logging.info("Copying {} to {}\n".format(idxstatus_path, temp.name))
                 idxstatus_fp.seek(0)
                 temp.file.write(idxstatus_fp.read())
                 temp.close()
@@ -158,7 +161,7 @@ if __name__ == '__main__':
 
     try:
         if shutil.which("recoll") is None:
-            sys.stderr.write("Warning: could not find 'recoll' executable. Is recoll installed?\n")
+            logging.warning("Could not find 'recoll' executable. Is recoll installed?\n")
     except AttributeError:
         # shutil.which() is only in python 3.3 and later.
         pass
