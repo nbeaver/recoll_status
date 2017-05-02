@@ -102,10 +102,9 @@ def format_idxstatus(idxstatus):
         '5' : "DBIXS_MONITOR",
         '6' : "DBIXS_DONE",
     }
-    formatted = []
+    formatted = ['DbIxStatus is {}: {}'.format(idxstatus['phase'], DbIxStatus[idxstatus['phase']])]
     # https://bitbucket.org/medoc/recoll/src/dabc5bae1dd7f8b5049ef021c441ffb8050cd7eb/src/index/indexer.h?at=default&fileviewer=file-view-default#indexer.h-40
     descriptors = collections.OrderedDict()
-    descriptors['phase'] = 'DbIxStatus is'
     descriptors['docsdone'] = 'Documents updated:'
     descriptors['filesdone'] = 'Files tested:'
     descriptors['filerrors'] = 'Failed files:'
