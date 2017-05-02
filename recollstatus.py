@@ -3,10 +3,8 @@
 from __future__  import print_function
 import errno
 import os
-import sys
 import shutil
 import datetime
-import time
 import collections
 import argparse
 import logging
