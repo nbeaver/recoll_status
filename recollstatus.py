@@ -92,6 +92,10 @@ def parse_idxstatus(idxstatus_path, write_tempfiles=True):
 
         idxstatus[key] = val
 
+    if idxstatus['phase'] in [0, 4, 5]:
+        # Don't have examples of these to test with yet.
+        write_tempfile(idxstatus_fp, "idxstatus")
+
     return idxstatus
 
 def format_idxstatus(idxstatus):
