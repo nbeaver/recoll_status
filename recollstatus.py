@@ -65,8 +65,15 @@ def since_last_run(idxstatus_path):
         date_recollindex_last_started = datetime.datetime.fromtimestamp(idxstatus_timestamp)
     return date_recollindex_last_started, now
 
-def parse_idxstatus(idxstatus_path, write_tempfiles=True):
+def write_tempfile(fp, prefix):
+    import tempfile
+    temp = tempfile.NamedTemporaryFile(prefix=prefix, delete=False)
+    logging.info("Copying {} to {}\n".format(fp.name, temp.name))
+    fp.seek(0)
+    temp.file.write(fp.read())
+    temp.close()
 
+def parse_idxstatus(idxstatus_path, write_tempfiles=True):
     idxstatus = collections.OrderedDict()
 
     with open(idxstatus_path) as idxstatus_fp:
@@ -78,14 +85,9 @@ def parse_idxstatus(idxstatus_path, write_tempfiles=True):
         except ValueError:
             logging.error("Cannot parse line: {}\n".format(line))
             if write_tempfiles:
-                # If the parsing the idxstatus file filas,
+                # If the parsing the idxstatus file fails,
                 # keep a copy of it for later debugging.
-                import tempfile
-                temp = tempfile.NamedTemporaryFile(prefix="idxstatus", delete=False)
-                logging.info("Copying {} to {}\n".format(idxstatus_path, temp.name))
-                idxstatus_fp.seek(0)
-                temp.file.write(idxstatus_fp.read())
-                temp.close()
+                write_tempfile(idxstatus_fp, "idxstatus")
             raise
 
         idxstatus[key] = val
