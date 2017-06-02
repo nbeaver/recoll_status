@@ -87,14 +87,14 @@ def parse_idxstatus(idxstatus_path, write_tempfiles=True):
             if write_tempfiles:
                 # If the parsing the idxstatus file fails,
                 # keep a copy of it for later debugging.
-                write_tempfile(idxstatus_fp, "idxstatus")
+                write_tempfile(idxstatus_fp, prefix="idxstatus")
             raise
 
         idxstatus[key] = val
 
     if idxstatus['phase'] in [0, 4, 5]:
         # Don't have examples of these to test with yet.
-        write_tempfile(idxstatus_fp, "idxstatus")
+        write_tempfile(idxstatus_fp, prefix="idxstatus")
 
     return idxstatus
 
