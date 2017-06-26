@@ -1,3 +1,5 @@
+.PHONY: all test clean
+
 all: readme.html todo.html
 	python recollstatus.py
 
