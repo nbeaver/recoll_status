@@ -1,8 +1,9 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 import unittest
 import recollstatus
 import os
 import logging
+import io
 
 class recollstatusTest(unittest.TestCase):
     def test_parsing(self):
@@ -16,6 +17,12 @@ class recollstatusTest(unittest.TestCase):
                     logging.error("recollstatus.parse_idxstatus failed on file: {}".format(filepath))
                     raise
                 recollstatus.format_idxstatus(parsed)
+
+    def test_empty(self):
+        empty_fp = io.StringIO('')
+        empty_fp.name = 'empty'
+        with self.assertRaises(ValueError):
+            parsed = recollstatus.parse_idxstatus(empty_fp)
 
 if __name__ == '__main__':
     unittest.main()
