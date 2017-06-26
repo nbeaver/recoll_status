@@ -7,5 +7,8 @@ readme.html : readme.rst
 todo.html : todo.md
 	markdown todo.md > todo.html
 
+test :
+	python test_recollstatus.py
+
 clean :
 	rm -f readme.html
