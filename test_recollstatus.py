@@ -9,9 +9,9 @@ class recollstatusTest(unittest.TestCase):
         dirname = 'idxstatuses'
         for filename in os.listdir(dirname):
             filepath = os.path.join(dirname, filename)
-            if os.path.isfile(filepath):
+            with open(filepath) as fp:
                 try:
-                    parsed = recollstatus.parse_idxstatus(filepath, write_tempfiles=False)
+                    parsed = recollstatus.parse_idxstatus(fp, write_tempfiles=False)
                 except:
                     logging.error("recollstatus.parse_idxstatus failed on file: {}".format(filepath))
                     raise

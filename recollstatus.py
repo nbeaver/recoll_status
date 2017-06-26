@@ -73,11 +73,10 @@ def write_tempfile(fp, prefix):
     temp.file.write(fp.read())
     temp.close()
 
-def parse_idxstatus(idxstatus_path, write_tempfiles=True):
+def parse_idxstatus(idxstatus_fp, write_tempfiles=True):
     idxstatus = collections.OrderedDict()
 
-    with open(idxstatus_path) as idxstatus_fp:
-        text = idxstatus_fp.read()
+    text = idxstatus_fp.read()
     text_wrapped = text.replace('\\\n', '')
     for line in text_wrapped.splitlines():
         try:
@@ -93,7 +92,7 @@ def parse_idxstatus(idxstatus_path, write_tempfiles=True):
         idxstatus[key] = val
 
     if 'phase' not in idxstatus:
-        raise ValueError("No 'phase' field in file '{}'".format(idxstatus_path))
+        raise ValueError("No 'phase' field in file '{}'".format(idxstatus_fp.name))
 
     if idxstatus['phase'] in [0, 4, 5]:
         # Don't have examples of these to test with yet.
@@ -136,7 +135,8 @@ def recollstatus(recoll_dir):
         recollindex_start, then = running_time(os.path.join(recoll_dir, "xapiandb", "flintlock"))
         recollindex_elapsed_time = then - recollindex_start
         status.append(" recollindex has been running for {}".format(recollindex_elapsed_time))
-        status.append(format_idxstatus(parse_idxstatus(os.path.join(recoll_dir, "idxstatus.txt"))))
+        with open(os.path.join(recoll_dir, "idxstatus.txt")) as idxstatus_fp:
+            status.append(format_idxstatus(parse_idxstatus(idxstatus_fp)))
     else:
         status.append("recollindex is not running")
         recollindex_last_started, then = since_last_run(os.path.join(recoll_dir, "idxstatus.txt"))
