@@ -135,8 +135,12 @@ def recollstatus(recoll_dir):
         recollindex_start, then = running_time(os.path.join(recoll_dir, "xapiandb", "flintlock"))
         recollindex_elapsed_time = then - recollindex_start
         status.append(" recollindex has been running for {}".format(recollindex_elapsed_time))
-        with open(os.path.join(recoll_dir, "idxstatus.txt")) as idxstatus_fp:
-            status.append(format_idxstatus(parse_idxstatus(idxstatus_fp)))
+        idxstatus_path = os.path.join(recoll_dir, "idxstatus.txt")
+        if os.path.getsize(idxstatus_path) > 0:
+            with open(idxstatus_path) as idxstatus_fp:
+                status.append(format_idxstatus(parse_idxstatus(idxstatus_fp)))
+        else:
+            status.append("No status information.")
     else:
         status.append("recollindex is not running")
         recollindex_last_started, then = since_last_run(os.path.join(recoll_dir, "idxstatus.txt"))
