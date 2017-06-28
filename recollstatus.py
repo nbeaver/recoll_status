@@ -73,6 +73,13 @@ def write_tempfile(fp, prefix):
     temp.file.write(fp.read())
     temp.close()
 
+def write_tempfile_text(text, prefix):
+    import tempfile
+    temp = tempfile.NamedTemporaryFile(prefix=prefix, delete=False)
+    logging.info("Copying to {}\n".format(temp.name))
+    temp.file.write(text)
+    temp.close()
+
 def parse_idxstatus(idxstatus_fp, write_tempfiles=True):
     idxstatus = collections.OrderedDict()
 
@@ -87,6 +94,7 @@ def parse_idxstatus(idxstatus_fp, write_tempfiles=True):
                 # If the parsing the idxstatus file fails,
                 # keep a copy of it for later debugging.
                 write_tempfile(idxstatus_fp, prefix="idxstatus")
+                write_tempfile_text(text, prefix="idxstatus_txt")
             raise
 
         idxstatus[key] = val
@@ -97,6 +105,7 @@ def parse_idxstatus(idxstatus_fp, write_tempfiles=True):
     if idxstatus['phase'] in [0, 4, 5]:
         # Don't have examples of these to test with yet.
         write_tempfile(idxstatus_fp, prefix="idxstatus")
+        write_tempfile_text(text, prefix="idxstatus_txt")
 
     return idxstatus
 
