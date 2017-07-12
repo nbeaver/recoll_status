@@ -102,7 +102,7 @@ def parse_idxstatus(idxstatus_fp, write_tempfiles=True):
     if 'phase' not in idxstatus:
         raise ValueError("No 'phase' field in file '{}'".format(idxstatus_fp.name))
 
-    if idxstatus['phase'] in [0, 4, 5]:
+    if idxstatus['phase'] in ['0', '4', '5']:
         # Don't have examples of these to test with yet.
         write_tempfile(idxstatus_fp, prefix="idxstatus")
         write_tempfile_text(text, prefix="idxstatus_txt")
