@@ -7,3 +7,4 @@
 - [x] Example of phase 6 (DBIXS_DONE)
 - [ ] Parse `recoll.conf` for `idxstatusfile` in case it is not default.
 - [ ] Show PID of recollindex if available.
+- [ ] Show a message if there is a new tempfile written.
