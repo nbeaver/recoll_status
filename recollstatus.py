@@ -145,6 +145,8 @@ def recollstatus(recoll_dir):
         recollindex_elapsed_time = then - recollindex_start
         status.append(" recollindex has been running for {}".format(recollindex_elapsed_time))
         idxstatus_path = os.path.join(recoll_dir, "idxstatus.txt")
+        recollindex_last_started, then = since_last_run(idxstatus_path)
+        status.append(" recollindex was last started on {}".format(recollindex_last_started.ctime()))
         if os.path.getsize(idxstatus_path) > 0:
             with open(idxstatus_path) as idxstatus_fp:
                 status.append(format_idxstatus(parse_idxstatus(idxstatus_fp)))
