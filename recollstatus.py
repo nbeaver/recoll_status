@@ -51,19 +51,28 @@ def latest_query(history_path):
 
     return date_last_query, now
 
-def running_time(flintlock_path):
+def last_started(flintlock_path):
     if os.path.isfile(flintlock_path):
         flintflock_timestamp = os.path.getmtime(flintlock_path)
         now = datetime.datetime.now()
         date_recollindex_started = datetime.datetime.fromtimestamp(flintflock_timestamp)
     return date_recollindex_started, now
 
-def since_last_run(idxstatus_path):
+def since_last_started(flintlock_path):
+    # Files that should also work:
+    # ~/.recoll/index.pid
+    if os.path.isfile(flintlock_path):
+        timestamp = os.path.getmtime(flintlock_path)
+        now = datetime.datetime.now()
+        date_recollindex_last_started = datetime.datetime.fromtimestamp(timestamp)
+    return date_recollindex_last_started, now
+
+def since_last_active(idxstatus_path):
     if os.path.isfile(idxstatus_path):
         idxstatus_timestamp = os.path.getmtime(idxstatus_path)
         now = datetime.datetime.now()
-        date_recollindex_last_started = datetime.datetime.fromtimestamp(idxstatus_timestamp)
-    return date_recollindex_last_started, now
+        date_recollindex_last_active = datetime.datetime.fromtimestamp(idxstatus_timestamp)
+    return date_recollindex_last_active, now
 
 def write_tempfile(fp, prefix):
     import tempfile
@@ -141,12 +150,11 @@ def recollstatus(recoll_dir):
     status = []
     if recollindex_running(os.path.join(recoll_dir, "index.pid")):
         status.append("recollindex is running")
-        recollindex_start, then = running_time(os.path.join(recoll_dir, "xapiandb", "flintlock"))
+        recollindex_start, then = last_started(os.path.join(recoll_dir, "xapiandb", "flintlock"))
         recollindex_elapsed_time = then - recollindex_start
-        status.append(" recollindex has been running for {}".format(recollindex_elapsed_time))
+        status.append(" recollindex was last started on: {}".format(recollindex_start.ctime()))
+        status.append(" recollindex has been running for: {}".format(recollindex_elapsed_time))
         idxstatus_path = os.path.join(recoll_dir, "idxstatus.txt")
-        recollindex_last_started, then = since_last_run(idxstatus_path)
-        status.append(" recollindex was last started on {}".format(recollindex_last_started.ctime()))
         if os.path.getsize(idxstatus_path) > 0:
             with open(idxstatus_path) as idxstatus_fp:
                 status.append(format_idxstatus(parse_idxstatus(idxstatus_fp)))
@@ -154,10 +162,14 @@ def recollstatus(recoll_dir):
             status.append("No status information.")
     else:
         status.append("recollindex is not running")
-        recollindex_last_started, then = since_last_run(os.path.join(recoll_dir, "idxstatus.txt"))
-        time_since_last_index = then - recollindex_last_started
-        status.append(" recollindex was last started on {}".format(recollindex_last_started.ctime()))
-        status.append(" time since recollindex last started: {}".format(time_since_last_index))
+        recollindex_start, then = last_started(os.path.join(recoll_dir, "xapiandb", "flintlock"))
+        time_since_last_started = then - recollindex_start
+        recollindex_last_active, then = since_last_active(os.path.join(recoll_dir, "idxstatus.txt"))
+        time_since_last_index = then - recollindex_last_active
+        status.append(" recollindex was last started on: {}".format(recollindex_start.ctime()))
+        status.append(" recollindex was last active on:  {}".format(recollindex_last_active.ctime()))
+        status.append(" time since recollindex last started: {}".format(time_since_last_started))
+        status.append(" time since recollindex last active:  {}".format(time_since_last_index))
 
     date_of_last_query, date_now = latest_query(os.path.join(recoll_dir, "history"))
     if date_of_last_query:
