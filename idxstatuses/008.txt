@@ -1,0 +1,7 @@
+phase = 6
+docsdone = 3274
+filesdone = 72695
+fileerrors = 287
+dbtotdocs = 85072
+totfiles = 72695
+fn = 
