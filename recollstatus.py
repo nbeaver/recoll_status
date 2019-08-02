@@ -42,6 +42,7 @@ def recollindex_running(pid_filepath):
     return True
 
 def latest_query(history_path):
+    # Caveat: this is only valid if history is enabled.
     now = datetime.datetime.now()
     if os.path.isfile(history_path):
         history_timestamp = os.path.getmtime(history_path)
