@@ -10,3 +10,4 @@
 - [ ] Show a message in syslog if there is a new tempfile written.
 - [ ] Save traceback to tempfile if the script errors out.
     - https://stackoverflow.com/questions/31636884/print-exception-with-stack-trace-to-file
+    - https://stackoverflow.com/questions/1508467/log-exception-with-traceback
