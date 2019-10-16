@@ -205,7 +205,25 @@ if __name__ == '__main__':
         default=os.path.expanduser("~/.recoll"),
         help='Recoll directory'
     )
+    parser.add_argument(
+        '-v',
+        '--verbose',
+        help='More verbose logging',
+        dest="loglevel",
+        default=logging.WARNING,
+        action="store_const",
+        const=logging.INFO,
+    )
+    parser.add_argument(
+        '-b',
+        '--debug',
+        help='Enable debugging logs',
+        action="store_const",
+        dest="loglevel",
+        const=logging.DEBUG,
+    )
     args = parser.parse_args()
+    logging.basicConfig(level=args.loglevel)
 
     try:
         if shutil.which("recoll") is None:
