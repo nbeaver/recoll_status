@@ -18,11 +18,5 @@ class recollstatusTest(unittest.TestCase):
                     raise
                 recollstatus.format_idxstatus(parsed)
 
-    def test_empty(self):
-        empty_fp = io.StringIO(u'')
-        empty_fp.name = 'empty'
-        with self.assertRaises(ValueError):
-            parsed = recollstatus.parse_idxstatus(empty_fp)
-
 if __name__ == '__main__':
     unittest.main()
