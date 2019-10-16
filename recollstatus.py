@@ -133,7 +133,10 @@ def format_idxstatus(idxstatus):
         '5' : "DBIXS_MONITOR",
         '6' : "DBIXS_DONE",
     }
-    formatted = ['DbIxStatus is {}: {}'.format(idxstatus['phase'], DbIxStatus[idxstatus['phase']])]
+    if 'phase' in idxstatus:
+        formatted = ['DbIxStatus is {}: {}'.format(idxstatus['phase'], DbIxStatus[idxstatus['phase']])]
+    else:
+        formatted = []
     # https://bitbucket.org/medoc/recoll/src/dabc5bae1dd7f8b5049ef021c441ffb8050cd7eb/src/index/indexer.h?at=default&fileviewer=file-view-default#indexer.h-40
     # https://opensourceprojects.eu/p/recoll1/code/ci/85a3291fd71fb0fae225f836b684d8b462567422/tree/src/index/
     descriptors = collections.OrderedDict()
@@ -145,10 +148,13 @@ def format_idxstatus(idxstatus):
     for field, description in descriptors.items():
         if field in idxstatus:
             formatted.append('{} {}'.format(description, idxstatus[field]))
-    if idxstatus['phase'] == '1':
-        formatted.append('Indexing this file: {}'.format(idxstatus['fn']))
+    if 'phase' in idxstatus:
+        if idxstatus['phase'] == '1':
+            formatted.append('Indexing this file: {}'.format(idxstatus['fn']))
+        else:
+            formatted.append('Not indexing files now.')
     else:
-        formatted.append('Not indexing files now.')
+            formatted.append('Indexing phase unknown (blank idxstatus file?)')
 
     return '\n'.join(formatted)
 
