@@ -92,6 +92,10 @@ def parse_idxstatus(idxstatus_fp, write_tempfiles=True):
     idxstatus = collections.OrderedDict()
 
     text = idxstatus_fp.read()
+    if text == '':
+        logging.warning('idxstatus file is blank')
+        return idxstatus
+
     text_wrapped = text.replace('\\\n', '')
     for line in text_wrapped.splitlines():
         try:
