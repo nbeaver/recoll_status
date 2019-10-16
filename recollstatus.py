@@ -53,19 +53,17 @@ def latest_query(history_path):
     return date_last_query, now
 
 def last_started(flintlock_path):
-    if os.path.isfile(flintlock_path):
-        flintflock_timestamp = os.path.getmtime(flintlock_path)
-        now = datetime.datetime.now()
-        date_recollindex_started = datetime.datetime.fromtimestamp(flintflock_timestamp)
+    flintflock_timestamp = os.path.getmtime(flintlock_path)
+    now = datetime.datetime.now()
+    date_recollindex_started = datetime.datetime.fromtimestamp(flintflock_timestamp)
     return date_recollindex_started, now
 
 def since_last_started(flintlock_path):
     # Files that should also work:
     # ~/.recoll/index.pid
-    if os.path.isfile(flintlock_path):
-        timestamp = os.path.getmtime(flintlock_path)
-        now = datetime.datetime.now()
-        date_recollindex_last_started = datetime.datetime.fromtimestamp(timestamp)
+    timestamp = os.path.getmtime(flintlock_path)
+    now = datetime.datetime.now()
+    date_recollindex_last_started = datetime.datetime.fromtimestamp(timestamp)
     return date_recollindex_last_started, now
 
 def since_last_active(idxstatus_path):
