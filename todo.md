@@ -5,7 +5,7 @@
 - [x] Example of phase 4 (DBIXS_CLOSING)
 - [ ] Example of phase 5 (DBIXS_MONITOR)
 - [x] Example of phase 6 (DBIXS_DONE)
-- [ ] Gracefully handle empty idxstatus file
+- [x] Gracefully handle empty idxstatus file
 - [ ] Parse `recoll.conf` for `idxstatusfile` in case it is not default.
 - [ ] Show PID of recollindex if available.
 - [ ] Show a message in syslog if there is a new tempfile written.
