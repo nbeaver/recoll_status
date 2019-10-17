@@ -31,6 +31,10 @@ def recollindex_running(pid_filepath):
         raise
     logging.info("recoll_pid = '{}'".format(recoll_pid))
 
+    # TODO: split this into a separate function and handle things more cleanly.
+    # https://stackoverflow.com/questions/568271/how-to-check-if-there-exists-a-process-with-a-given-pid-in-python
+    # https://stackoverflow.com/questions/7647167/check-if-a-process-is-running-using-python-on-linux
+    # https://unix.stackexchange.com/questions/169898/what-does-kill-0-do
     try:
         os.kill(recoll_pid, 0)
     except OSError as e:
