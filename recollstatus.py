@@ -29,6 +29,7 @@ def recollindex_running(pid_filepath):
     except ValueError:
         logging.error("Not a valid process ID: {}\n".format(recoll_pid_string))
         raise
+    logging.info("recoll_pid = '{}'".format(recoll_pid))
 
     try:
         os.kill(recoll_pid, 0)
