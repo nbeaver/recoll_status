@@ -35,9 +35,13 @@ def recollindex_running(pid_filepath):
         os.kill(recoll_pid, 0)
     except OSError as e:
         if e.errno == errno.ESRCH:
-            logging.warning("{} has process ID {}, but no process with that ID is running.\n".format(pid_filepath, recoll_pid_string))
+            logging.warning("'{}' has process ID '{}', but no process with that ID is running.\n".format(pid_filepath, recoll_pid))
             return False
+        elif e.errno == errno.EPERM:
+            logging.warning("'{}' has process ID '{}', but that process is running under a different user.\n".format(pid_filepath, recoll_pid))
+            return True
         else:
+            logging.error("sent signal to PID: '{}'".format(recoll_pid))
             raise
 
     return True
