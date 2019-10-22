@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from __future__  import print_function
+from __future__ import print_function
 import errno
 import os
 import shutil
@@ -8,6 +8,7 @@ import datetime
 import collections
 import argparse
 import logging
+
 
 def recollindex_running(pid_filepath):
     # Example PID file path: ~/.recoll/index.pid
@@ -21,7 +22,7 @@ def recollindex_running(pid_filepath):
         raise
 
     recoll_pid_string = pid_file.read()
-    if recoll_pid_string == '':
+    if recoll_pid_string == "":
         return False
 
     try:
@@ -39,16 +40,25 @@ def recollindex_running(pid_filepath):
         os.kill(recoll_pid, 0)
     except OSError as e:
         if e.errno == errno.ESRCH:
-            logging.warning("'{}' has process ID '{}', but no process with that ID is running.\n".format(pid_filepath, recoll_pid))
+            logging.warning(
+                "'{}' has process ID '{}', but no process with that ID is running.\n".format(
+                    pid_filepath, recoll_pid
+                )
+            )
             return False
         elif e.errno == errno.EPERM:
-            logging.warning("'{}' has process ID '{}', but that process is running under a different user.\n".format(pid_filepath, recoll_pid))
+            logging.warning(
+                "'{}' has process ID '{}', but that process is running under a different user.\n".format(
+                    pid_filepath, recoll_pid
+                )
+            )
             return True
         else:
             logging.error("sent signal to PID: '{}'".format(recoll_pid))
             raise
 
     return True
+
 
 def latest_query(history_path):
     # Caveat: this is only valid if history is enabled.
@@ -61,11 +71,13 @@ def latest_query(history_path):
 
     return date_last_query, now
 
+
 def last_started(flintlock_path):
     flintflock_timestamp = os.path.getmtime(flintlock_path)
     now = datetime.datetime.now()
     date_recollindex_started = datetime.datetime.fromtimestamp(flintflock_timestamp)
     return date_recollindex_started, now
+
 
 def since_last_started(flintlock_path):
     # Files that should also work:
@@ -75,40 +87,48 @@ def since_last_started(flintlock_path):
     date_recollindex_last_started = datetime.datetime.fromtimestamp(timestamp)
     return date_recollindex_last_started, now
 
+
 def since_last_active(idxstatus_path):
     if os.path.isfile(idxstatus_path):
         idxstatus_timestamp = os.path.getmtime(idxstatus_path)
         now = datetime.datetime.now()
-        date_recollindex_last_active = datetime.datetime.fromtimestamp(idxstatus_timestamp)
+        date_recollindex_last_active = datetime.datetime.fromtimestamp(
+            idxstatus_timestamp
+        )
     return date_recollindex_last_active, now
+
 
 def write_tempfile(fp, prefix):
     import tempfile
+
     temp = tempfile.NamedTemporaryFile(prefix=prefix, delete=False)
     logging.info("Copying {} to {}\n".format(fp.name, temp.name))
     fp.seek(0)
     temp.file.write(fp.read())
     temp.close()
 
+
 def write_tempfile_text(text, prefix):
     import tempfile
+
     temp = tempfile.NamedTemporaryFile(prefix=prefix, delete=False)
     logging.info("Copying to {}\n".format(temp.name))
     temp.file.write(text)
     temp.close()
 
+
 def parse_idxstatus(idxstatus_fp, write_tempfiles=True):
     idxstatus = collections.OrderedDict()
 
     text = idxstatus_fp.read()
-    if text == '':
-        logging.warning('idxstatus file is blank')
+    if text == "":
+        logging.warning("idxstatus file is blank")
         return idxstatus
 
-    text_wrapped = text.replace('\\\n', '')
+    text_wrapped = text.replace("\\\n", "")
     for line in text_wrapped.splitlines():
         try:
-            key, val = (x.strip() for x in line.split('=', 1))
+            key, val = (x.strip() for x in line.split("=", 1))
         except ValueError:
             logging.error("Cannot parse line: {}\n".format(line))
             if write_tempfiles:
@@ -120,113 +140,143 @@ def parse_idxstatus(idxstatus_fp, write_tempfiles=True):
 
         idxstatus[key] = val
 
-    if 'phase' not in idxstatus:
+    if "phase" not in idxstatus:
         write_tempfile(idxstatus_fp, prefix="idxstatus")
         write_tempfile_text(text, prefix="idxstatus_txt")
         raise ValueError("No 'phase' field in file '{}'".format(idxstatus_fp.name))
 
-    if idxstatus['phase'] in ['0', '5']:
+    if idxstatus["phase"] in ["0", "5"]:
         # Don't have examples of these to test with yet.
         write_tempfile(idxstatus_fp, prefix="idxstatus")
         write_tempfile_text(text, prefix="idxstatus_txt")
 
     return idxstatus
 
+
 def format_idxstatus(idxstatus):
     DbIxStatus = {
-        '0' : "DBIXS_NONE",
-        '1' : "DBIXS_FILES",
-        '2' : "DBIXS_PURGE",
-        '3' : "DBIXS_STEMDB",
-        '4' : "DBIXS_CLOSING",
-        '5' : "DBIXS_MONITOR",
-        '6' : "DBIXS_DONE",
+        "0": "DBIXS_NONE",
+        "1": "DBIXS_FILES",
+        "2": "DBIXS_PURGE",
+        "3": "DBIXS_STEMDB",
+        "4": "DBIXS_CLOSING",
+        "5": "DBIXS_MONITOR",
+        "6": "DBIXS_DONE",
     }
-    if 'phase' in idxstatus:
-        formatted = ['DbIxStatus is {}: {}'.format(idxstatus['phase'], DbIxStatus[idxstatus['phase']])]
+    if "phase" in idxstatus:
+        formatted = [
+            "DbIxStatus is {}: {}".format(
+                idxstatus["phase"], DbIxStatus[idxstatus["phase"]]
+            )
+        ]
     else:
         formatted = []
     # https://bitbucket.org/medoc/recoll/src/dabc5bae1dd7f8b5049ef021c441ffb8050cd7eb/src/index/indexer.h?at=default&fileviewer=file-view-default#indexer.h-40
     # https://opensourceprojects.eu/p/recoll1/code/ci/85a3291fd71fb0fae225f836b684d8b462567422/tree/src/index/
     descriptors = collections.OrderedDict()
-    descriptors['docsdone'] =  'Documents updated:                    '
-    descriptors['filesdone'] = 'Files tested:                         '
-    descriptors['filerrors'] = 'Failed files:                         '
-    descriptors['totfiles'] =  'Total files in index:                 '
-    descriptors['dbtotdocs'] = 'Starting number of indexed documents: '
+    descriptors["docsdone"] = "Documents updated:                    "
+    descriptors["filesdone"] = "Files tested:                         "
+    descriptors["filerrors"] = "Failed files:                         "
+    descriptors["totfiles"] = "Total files in index:                 "
+    descriptors["dbtotdocs"] = "Starting number of indexed documents: "
     for field, description in descriptors.items():
         if field in idxstatus:
-            formatted.append('{} {}'.format(description, idxstatus[field]))
-    if 'phase' in idxstatus:
-        if idxstatus['phase'] == '1':
-            formatted.append('Indexing this file: {}'.format(idxstatus['fn']))
+            formatted.append("{} {}".format(description, idxstatus[field]))
+    if "phase" in idxstatus:
+        if idxstatus["phase"] == "1":
+            formatted.append("Indexing this file: {}".format(idxstatus["fn"]))
         else:
-            formatted.append('Not indexing files now.')
+            formatted.append("Not indexing files now.")
     else:
-            formatted.append('Indexing phase unknown (blank idxstatus file?)')
+        formatted.append("Indexing phase unknown (blank idxstatus file?)")
 
-    return '\n'.join(formatted)
+    return "\n".join(formatted)
+
 
 def recollstatus(recoll_dir):
     status = []
     if recollindex_running(os.path.join(recoll_dir, "index.pid")):
         status.append("recollindex is running")
-        recollindex_start, then = last_started(os.path.join(recoll_dir, "xapiandb", "flintlock"))
+        recollindex_start, then = last_started(
+            os.path.join(recoll_dir, "xapiandb", "flintlock")
+        )
         recollindex_elapsed_time = then - recollindex_start
-        status.append(" recollindex was last started on: {}".format(recollindex_start.ctime()))
-        status.append(" recollindex has been running for: {}".format(recollindex_elapsed_time))
+        status.append(
+            " recollindex was last started on: {}".format(recollindex_start.ctime())
+        )
+        status.append(
+            " recollindex has been running for: {}".format(recollindex_elapsed_time)
+        )
         idxstatus_path = os.path.join(recoll_dir, "idxstatus.txt")
         with open(idxstatus_path) as idxstatus_fp:
             status.append(format_idxstatus(parse_idxstatus(idxstatus_fp)))
     else:
         status.append("recollindex is not running")
-        recollindex_start, then = last_started(os.path.join(recoll_dir, "xapiandb", "flintlock"))
+        recollindex_start, then = last_started(
+            os.path.join(recoll_dir, "xapiandb", "flintlock")
+        )
         time_since_last_started = then - recollindex_start
-        recollindex_last_active, then = since_last_active(os.path.join(recoll_dir, "idxstatus.txt"))
+        recollindex_last_active, then = since_last_active(
+            os.path.join(recoll_dir, "idxstatus.txt")
+        )
         time_since_last_index = then - recollindex_last_active
-        status.append(" recollindex was last started on: {}".format(recollindex_start.ctime()))
-        status.append(" recollindex was last active on:  {}".format(recollindex_last_active.ctime()))
-        status.append(" time since recollindex last started: {}".format(time_since_last_started))
-        status.append(" time since recollindex last active:  {}".format(time_since_last_index))
+        status.append(
+            " recollindex was last started on: {}".format(recollindex_start.ctime())
+        )
+        status.append(
+            " recollindex was last active on:  {}".format(
+                recollindex_last_active.ctime()
+            )
+        )
+        status.append(
+            " time since recollindex last started: {}".format(time_since_last_started)
+        )
+        status.append(
+            " time since recollindex last active:  {}".format(time_since_last_index)
+        )
 
     date_of_last_query, date_now = latest_query(os.path.join(recoll_dir, "history"))
     if date_of_last_query:
         duration_since_last_query = date_now - date_of_last_query
 
-        status.append("recoll database last queried on: {}".format(date_of_last_query.ctime()))
+        status.append(
+            "recoll database last queried on: {}".format(date_of_last_query.ctime())
+        )
         status.append(" which was {} ago.".format(duration_since_last_query))
 
-    return '\n'.join(status)
+    return "\n".join(status)
+
 
 def readable_directory(path):
     if not os.path.isdir(path):
-        raise argparse.ArgumentTypeError('not an existing directory: {}'.format(path))
+        raise argparse.ArgumentTypeError("not an existing directory: {}".format(path))
     if not os.access(path, os.R_OK):
-        raise argparse.ArgumentTypeError('not a readable directory: {}'.format(path))
+        raise argparse.ArgumentTypeError("not a readable directory: {}".format(path))
     return path
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Display status of recollindex.')
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Display status of recollindex.")
     parser.add_argument(
-        '-d',
-        '--recoll-dir',
+        "-d",
+        "--recoll-dir",
         type=readable_directory,
         default=os.path.expanduser("~/.recoll"),
-        help='Recoll directory'
+        help="Recoll directory",
     )
     parser.add_argument(
-        '-v',
-        '--verbose',
-        help='More verbose logging',
+        "-v",
+        "--verbose",
+        help="More verbose logging",
         dest="loglevel",
         default=logging.WARNING,
         action="store_const",
         const=logging.INFO,
     )
     parser.add_argument(
-        '-b',
-        '--debug',
-        help='Enable debugging logs',
+        "-b",
+        "--debug",
+        help="Enable debugging logs",
         action="store_const",
         dest="loglevel",
         const=logging.DEBUG,
@@ -236,7 +286,9 @@ if __name__ == '__main__':
 
     try:
         if shutil.which("recoll") is None:
-            logging.warning("Could not find 'recoll' executable. Is recoll installed?\n")
+            logging.warning(
+                "Could not find 'recoll' executable. Is recoll installed?\n"
+            )
     except AttributeError:
         # shutil.which() is only in python 3.3 and later.
         pass
