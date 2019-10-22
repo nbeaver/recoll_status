@@ -12,5 +12,9 @@ todo.html : todo.md
 test :
 	python test_recollstatus.py
 
+.PHONY: format
+format :
+	black recollstatus.py
+
 clean :
 	rm -f readme.html
