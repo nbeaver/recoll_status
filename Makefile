@@ -14,7 +14,7 @@ test :
 
 .PHONY: format
 format :
-	black recollstatus.py
+	yapf3 --in-place recollstatus.py
 
 clean :
 	rm -f readme.html
