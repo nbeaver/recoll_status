@@ -20,7 +20,7 @@ if a ``recollindex`` process is running and, if so,
 what it is doing and how far along it is.
 
 .. _Recoll: http://www.lesbonscomptes.com/recoll/
-.. _command to report its status: https://bitbucket.org/medoc/recoll/issue/154/show-status-of-how-many-documents-are-not
+.. _command to report its status: https://www.lesbonscomptes.com/recoll/bitbucket-issues-recoll/issue-154.html
 
 Here is an example of the output::
 
