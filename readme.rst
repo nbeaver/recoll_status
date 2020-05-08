@@ -11,11 +11,14 @@ The GUI for `Recoll`_ reports indexing progress that looks like this::
 
     Indexing in progress: Updating (42252 docs/38419 files/2166 errors/38419 tot files)
 
-However, there is no convenient `command to report its status`_ during indexing.
-The files in ``~/.recoll/`` have a lot of information about the status of the database and the ``recollindex`` process,
+However, there is no convenient
+`command to report its status`_ during indexing.
+The files in ``~/.recoll/`` have a lot of information
+about the status of the database and the ``recollindex`` process,
 though it is somewhat inconvenient to interpret this information.
 To make it easier,
-this repository provides a python script to give information about how long it's been since the last index,
+this repository provides a python script
+to give information about how long it's been since the last index,
 if a ``recollindex`` process is running and, if so,
 what it is doing and how far along it is.
 
@@ -39,9 +42,12 @@ Here is an example of the output::
 Heuristics for output.
 ----------------------
 
-- If ``~/.recoll/index.pid`` is not an empty file, then recollindex is running.
+- If ``~/.recoll/index.pid`` is not an empty file,
+  then recollindex is running.
   This process id can be used for looking up the process as well.
-  Its modification time is the time when recollindex started or stopped running.
+  Its modification time is the time
+  when recollindex started or stopped running.
+
 - The file ``~/.recoll/idxstatus.txt`` shows the progress and current file.
   Its modification time is the last successful update of ``recollindex``.
   (This may not be the current time if ``recollindex`` gets stuck.)
@@ -70,15 +76,23 @@ Heuristics for output.
 
 - The file ``~/.recoll/xapiandb/flintlock`` seems to be always empty.
   Its modification time is the time when ``recollindex`` started running.
+
 - The file ``~/.recoll/history`` gives the query history.
-  Its modification date is the last time a query was run with ``recoll -t`` or the graphical recoll closed.
+  Its modification date is the last time a query was run with ``recoll -t``
+  or the that last time graphical recoll closed.
 
 Thus:
 
 - To find the time when indexing started, look at ``flintlock``
-- To find the time when indexing was halted, look at ``index.pid`` (unless it's an empty file).
-- To find the time when indexing last successfully indexed a file, look at ``idxstatus.txt``.
-- To find the time when indexing succesfully completed -- impossible?
+
+- To find the time when indexing was halted,
+  look at ``index.pid`` (unless it's an empty file).
+
+- To find the time when indexing last successfully indexed a file,
+  look at ``idxstatus.txt``.
+
+- To find the time when indexing successfully completed -- impossible?
+
 - To find the time when a query last ran, look at ``history``.
 
 -------
