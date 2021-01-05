@@ -191,7 +191,7 @@ def format_idxstatus(idxstatus):
     return "\n".join(formatted)
 
 
-def recollstatus(recoll_dir):
+def recollstatus(recoll_dir, verbose=False):
     status = []
     if recollindex_running(os.path.join(recoll_dir, "index.pid")):
         status.append("recollindex is running")
@@ -221,6 +221,10 @@ def recollstatus(recoll_dir):
             time_since_last_started))
         status.append(" time since recollindex last active:  {}".format(
             time_since_last_index))
+        if verbose:
+            idxstatus_path = os.path.join(recoll_dir, "idxstatus.txt")
+            with open(idxstatus_path) as idxstatus_fp:
+                status.append(format_idxstatus(parse_idxstatus(idxstatus_fp)))
 
     date_of_last_query, date_now = latest_query(
         os.path.join(recoll_dir, "history"))
@@ -282,4 +286,7 @@ if __name__ == "__main__":
         # shutil.which() is only in python 3.3 and later.
         pass
 
-    print(recollstatus(args.recoll_dir))
+    if args.loglevel <= logging.INFO:
+        print(recollstatus(args.recoll_dir, verbose=True))
+    else:
+        print(recollstatus(args.recoll_dir, verbose=False))
