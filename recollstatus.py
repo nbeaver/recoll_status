@@ -271,7 +271,7 @@ def get_default_recoll_dir():
             logging.debug("Unix path does not exist: '{}'".format(unix_path))
 
     try :
-        LOCALAPPDATA = os.environ('LOCALAPPDATA')
+        LOCALAPPDATA = os.environ['LOCALAPPDATA']
         logging.debug("LOCALAPPDATA = '{}'".format(HOME))
     except KeyError:
         LOCALAPPDATA = None
