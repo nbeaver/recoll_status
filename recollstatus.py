@@ -153,24 +153,31 @@ def parse_idxstatus(idxstatus_fp, write_tempfiles=True):
 
 
 def format_idxstatus(idxstatus):
+    # TODO: should this even be included, since it can change with each version?
     DbIxStatus = {
         "0": "DBIXS_NONE",
         "1": "DBIXS_FILES",
-        "2": "DBIXS_PURGE",
-        "3": "DBIXS_STEMDB",
-        "4": "DBIXS_CLOSING",
-        "5": "DBIXS_MONITOR",
-        "6": "DBIXS_DONE",
+        "2": "DBIXS_FLUSH",
+        "3": "DBIXS_PURGE",
+        "4": "DBIXS_STEMDB",
+        "5": "DBIXS_CLOSING",
+        "6": "DBIXS_MONITOR",
+        "7": "DBIXS_DONE",
     }
-    if "phase" in idxstatus:
-        formatted = [
-            "DbIxStatus is {}: {}".format(idxstatus["phase"],
-                                          DbIxStatus[idxstatus["phase"]])
-        ]
-    else:
+    try:
+        phase_number = idxstatus["phase"]
+        try:
+            phase_name = DbIxStatus[phase_number]
+            formatted = [
+                "DbIxStatus is {} ({})".format(phase_number, phase_name)
+            ]
+        except KeyError:
+            formatted = [
+                "DbIxStatus is {} (unknown phase)".format(phase_number)
+            ]
+    except KeyError:
         formatted = []
-    # https://bitbucket.org/medoc/recoll/src/dabc5bae1dd7f8b5049ef021c441ffb8050cd7eb/src/index/indexer.h?at=default&fileviewer=file-view-default#indexer.h-40
-    # https://opensourceprojects.eu/p/recoll1/code/ci/85a3291fd71fb0fae225f836b684d8b462567422/tree/src/index/
+    # https://framagit.org/medoc92/recoll/-/blob/9d3869c2b954fb8e90cd7f0b1465fe358dbc49c3/src/index/idxstatus.h#L27
     descriptors = collections.OrderedDict()
     descriptors["docsdone"] = "Documents updated:                    "
     descriptors["filesdone"] = "Files tested:                         "
