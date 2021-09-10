@@ -201,7 +201,7 @@ def format_idxstatus(idxstatus):
 def recollstatus(recoll_dir, verbose=False):
     status = []
     if recollindex_running(os.path.join(recoll_dir, "index.pid")):
-        status.append("recollindex is running")
+        status.append("index.pid matches running process")
         recollindex_start, then = last_started(
             os.path.join(recoll_dir, "xapiandb", "flintlock"))
         recollindex_elapsed_time = then - recollindex_start
@@ -209,11 +209,9 @@ def recollstatus(recoll_dir, verbose=False):
             recollindex_start.ctime()))
         status.append(" recollindex has been running for: {}".format(
             recollindex_elapsed_time))
-        idxstatus_path = os.path.join(recoll_dir, "idxstatus.txt")
-        with open(idxstatus_path) as idxstatus_fp:
-            status.append(format_idxstatus(parse_idxstatus(idxstatus_fp)))
+
     else:
-        status.append("recollindex is not running")
+        status.append("index.pid does not match a running process")
         recollindex_start, then = last_started(
             os.path.join(recoll_dir, "xapiandb", "flintlock"))
         time_since_last_started = then - recollindex_start
@@ -228,10 +226,10 @@ def recollstatus(recoll_dir, verbose=False):
             time_since_last_started))
         status.append(" time since recollindex last active:  {}".format(
             time_since_last_index))
-        if verbose:
-            idxstatus_path = os.path.join(recoll_dir, "idxstatus.txt")
-            with open(idxstatus_path) as idxstatus_fp:
-                status.append(format_idxstatus(parse_idxstatus(idxstatus_fp)))
+
+    idxstatus_path = os.path.join(recoll_dir, "idxstatus.txt")
+    with open(idxstatus_path) as idxstatus_fp:
+        status.append(format_idxstatus(parse_idxstatus(idxstatus_fp)))
 
     date_of_last_query, date_now = latest_query(
         os.path.join(recoll_dir, "history"))
