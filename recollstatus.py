@@ -247,6 +247,47 @@ def readable_directory(path):
             "not a readable directory: {}".format(path))
     return path
 
+def get_default_recoll_dir():
+    """
+    "This configuration is the one used for indexing and querying when no
+    specific configuration is specified. It is located in ``$HOME/.recoll/``
+    for **Unix**-like systems and ``%LOCALAPPDATA%\\Recoll`` on **Windows**
+    (typically ``C:\\Users\\[me]\\Appdata\\Local\\Recoll``)."
+    <https://www.lesbonscomptes.com/recoll/usermanual/usermanual.html>
+    """
+    try:
+        HOME = os.environ['HOME']
+        logging.debug("HOME = '{}'".format(HOME))
+    except KeyError:
+        HOME = None
+
+    if HOME is not None:
+        unix_path = os.path.join(HOME, '.recoll')
+        logging.debug("looking for Unix path: '{}'".format(unix_path))
+        if os.path.exists(unix_path):
+            logging.debug("Unix path exists: '{}'".format(unix_path))
+            return unix_path
+        else:
+            logging.debug("Unix path does not exist: '{}'".format(unix_path))
+
+    try :
+        LOCALAPPDATA = os.environ('LOCALAPPDATA')
+        logging.debug("LOCALAPPDATA = '{}'".format(HOME))
+    except KeyError:
+        LOCALAPPDATA = None
+
+    if LOCALAPPDATA is not None:
+        windows_path = os.path.join(LOCALAPPDATA, 'Recoll')
+        logging.debug("looking for Windows path: '{}'".format(windows_path))
+        if os.path.exists(windows_path):
+            logging.debug("Windows path exists: '{}'".format(windows_path))
+            return windows_path
+        else:
+            logging.debug("Windows path does not exist: '{}'".format(windows_path))
+
+    logging.warning("Could not find recoll directory in default location.")
+    return None
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -255,7 +296,7 @@ if __name__ == "__main__":
         "-d",
         "--recoll-dir",
         type=readable_directory,
-        default=os.path.expanduser("~/.recoll"),
+        default=get_default_recoll_dir(),
         help="Recoll directory",
     )
     parser.add_argument(
