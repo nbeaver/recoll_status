@@ -154,6 +154,15 @@ def parse_idxstatus(idxstatus_fp, write_tempfiles=True):
 
 def format_idxstatus(idxstatus):
     # TODO: should this even be included, since it can change with each version?
+    DbIxStatus_before_v1p30p1 = {
+        "0": "DBIXS_NONE",
+        "1": "DBIXS_FILES",
+        "2": "DBIXS_PURGE",
+        "3": "DBIXS_STEMDB",
+        "4": "DBIXS_CLOSING",
+        "5": "DBIXS_MONITOR",
+        "6": "DBIXS_DONE",
+    }
     DbIxStatus = {
         "0": "DBIXS_NONE",
         "1": "DBIXS_FILES",
@@ -168,9 +177,18 @@ def format_idxstatus(idxstatus):
         phase_number = idxstatus["phase"]
         try:
             phase_name = DbIxStatus[phase_number]
-            formatted = [
-                "DbIxStatus is {} ({})".format(phase_number, phase_name)
-            ]
+            try:
+                phase_name_old = DbIxStatus_before_v1p30p1[phase_number]
+            except KeyError:
+                phasen_name_old = None
+            if phase_name == phase_name_old:
+                formatted = [
+                    "DbIxStatus is {} ({})".format(phase_number, phase_name)
+                ]
+            else:
+                formatted = [
+                    "DbIxStatus is {} ({} or {} for version 1.31.0 and earlier)".format(phase_number, phase_name, phase_name_old)
+                ]
         except KeyError:
             formatted = [
                 "DbIxStatus is {} (unknown phase)".format(phase_number)
