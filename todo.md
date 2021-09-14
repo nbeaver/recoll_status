@@ -1,10 +1,12 @@
 - [ ] Example of phase 0 (DBIXS_NONE)
 - [x] Example of phase 1 (DBIXS_FILES)
-- [x] Example of phase 2 (DBIXS_PURGE)
-- [x] Example of phase 3 (DBIXS_STEMDB)
-- [x] Example of phase 4 (DBIXS_CLOSING)
-- [ ] Example of phase 5 (DBIXS_MONITOR)
-- [x] Example of phase 6 (DBIXS_DONE)
+- [ ] Example of phase 2 (DBIXS_FLUSH)
+- [x] Example of phase 2/3 (DBIXS_PURGE)
+- [x] Example of phase 3/4 (DBIXS_STEMDB)
+- [ ] Example of phase 4/5 (DBIXS_CLOSING)
+- [x] Example of phase 5/6 (DBIXS_MONITOR)
+- [x] Example of phase 6/7 (DBIXS_DONE)
+- [x] Example of phase 7/8 (DBIXS_DONE)
 - [x] Gracefully handle empty idxstatus file
 - [ ] Parse `recoll.conf` for `idxstatusfile` in case it is not default.
 - [ ] Show PID of recollindex if available.
