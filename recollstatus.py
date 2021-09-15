@@ -16,24 +16,24 @@ def recollindex_running(pid_filepath):
         pid_file = open(pid_filepath)
     except IOError as e:
         if e.errno == 2:
-            logging.error(
+            logger.error(
                 "Could not find 'index.pid' at '{}'\n".format(pid_filepath))
         else:
-            logging.error(
+            logger.error(
                 "Could not open 'index.pid' at '{}'\n".format(pid_filepath))
         raise
 
     recoll_pid_string = pid_file.read()
-    logging.debug("recoll_pid_string = '{}'".format(recoll_pid_string))
+    logger.debug("recoll_pid_string = '{}'".format(recoll_pid_string))
     if recoll_pid_string == "":
         return False
 
     try:
         recoll_pid = int(recoll_pid_string)
     except ValueError:
-        logging.error("Not a valid process ID: {}\n".format(recoll_pid_string))
+        logger.error("Not a valid process ID: {}\n".format(recoll_pid_string))
         raise
-    logging.info("recoll_pid = '{}'".format(recoll_pid))
+    logger.info("recoll_pid = '{}'".format(recoll_pid))
 
     # TODO: split this into a separate function and handle things more cleanly.
     # https://stackoverflow.com/questions/568271/how-to-check-if-there-exists-a-process-with-a-given-pid-in-python
@@ -42,19 +42,19 @@ def recollindex_running(pid_filepath):
     try:
         os.kill(recoll_pid, 0)
     except OSError as e:
-        logging.debug("e.errno = '{}'".format(e.errno))
+        logger.debug("e.errno = '{}'".format(e.errno))
         if e.errno == errno.ESRCH:
-            logging.warning(
+            logger.warning(
                 "'{}' has process ID '{}', but no process with that ID is running.\n".
                 format(pid_filepath, recoll_pid))
             return False
         elif e.errno == errno.EPERM:
-            logging.warning(
+            logger.warning(
                 "'{}' has process ID '{}', but that process is running under a different user.\n".
                 format(pid_filepath, recoll_pid))
             return True
         else:
-            logging.error("sent signal to PID: '{}'".format(recoll_pid))
+            logger.error("sent signal to PID: '{}'".format(recoll_pid))
             raise
 
     return True
@@ -102,7 +102,7 @@ def write_tempfile(fp, prefix):
     import tempfile
 
     temp = tempfile.NamedTemporaryFile(prefix=prefix, delete=False)
-    logging.info("Copying {} to {}\n".format(fp.name, temp.name))
+    logger.info("Copying {} to {}\n".format(fp.name, temp.name))
     fp.seek(0)
     temp.file.write(fp.read())
     temp.close()
@@ -112,7 +112,7 @@ def write_tempfile_text(text, prefix):
     import tempfile
 
     temp = tempfile.NamedTemporaryFile(prefix=prefix, delete=False)
-    logging.info("Copying to {}\n".format(temp.name))
+    logger.info("Copying to {}\n".format(temp.name))
     temp.file.write(text)
     temp.close()
 
@@ -122,7 +122,7 @@ def parse_idxstatus(idxstatus_fp, write_tempfiles=True):
 
     text = idxstatus_fp.read()
     if text == "":
-        logging.warning("idxstatus file is blank")
+        logger.warning("idxstatus file is blank")
         return idxstatus
 
     text_wrapped = text.replace("\\\n", "")
@@ -130,7 +130,7 @@ def parse_idxstatus(idxstatus_fp, write_tempfiles=True):
         try:
             key, val = (x.strip() for x in line.split("=", 1))
         except ValueError:
-            logging.error("Cannot parse line: {}\n".format(line))
+            logger.error("Cannot parse line: {}\n".format(line))
             if write_tempfiles:
                 # If the parsing the idxstatus file fails,
                 # keep a copy of it for later debugging.
@@ -272,7 +272,7 @@ def readable_directory(path):
             "not a readable directory: {}".format(path))
     return path
 
-def get_default_recoll_dir():
+def get_default_recoll_dir(verbose=False):
     """
     "This configuration is the one used for indexing and querying when no
     specific configuration is specified. It is located in ``$HOME/.recoll/``
@@ -315,6 +315,7 @@ def get_default_recoll_dir():
 
 
 def main():
+    global logger
     parser = argparse.ArgumentParser(
         description="Display status of recollindex.")
     parser.add_argument(
@@ -342,14 +343,12 @@ def main():
         const=logging.DEBUG,
     )
     args = parser.parse_args()
-    logging.basicConfig(level=args.loglevel)
-
-    logging.debug("debug enabled")
-    logging.info("verbose enabled")
+    logger = logging.getLogger('recollstatus')
+    logger.setLevel(args.loglevel)
 
     try:
         if shutil.which("recoll") is None:
-            logging.warning(
+            logger.warning(
                 "Could not find 'recoll' executable. Is recoll installed?\n")
     except AttributeError:
         # shutil.which() is only in python 3.3 and later.
