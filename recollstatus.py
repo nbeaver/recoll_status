@@ -216,7 +216,7 @@ def format_idxstatus(idxstatus):
     return "\n".join(formatted)
 
 
-def recollstatus(recoll_dir, verbose=False):
+def recollstatus(recoll_dir):
     status = []
     if recollindex_running(os.path.join(recoll_dir, "index.pid")):
         status.append("index.pid matches running process")
@@ -350,7 +350,4 @@ if __name__ == "__main__":
         # shutil.which() is only in python 3.3 and later.
         pass
 
-    if args.loglevel <= logging.INFO:
-        print(recollstatus(args.recoll_dir, verbose=True))
-    else:
-        print(recollstatus(args.recoll_dir, verbose=False))
+    print(recollstatus(args.recoll_dir))
