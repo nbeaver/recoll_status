@@ -24,6 +24,7 @@ def recollindex_running(pid_filepath):
         raise
 
     recoll_pid_string = pid_file.read()
+    logging.debug("recoll_pid_string = '{}'".format(recoll_pid_string))
     if recoll_pid_string == "":
         return False
 
@@ -41,6 +42,7 @@ def recollindex_running(pid_filepath):
     try:
         os.kill(recoll_pid, 0)
     except OSError as e:
+        logging.debug("e.errno = '{}'".format(e.errno))
         if e.errno == errno.ESRCH:
             logging.warning(
                 "'{}' has process ID '{}', but no process with that ID is running.\n".
@@ -341,6 +343,9 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     logging.basicConfig(level=args.loglevel)
+
+    logging.debug("debug enabled")
+    logging.info("verbose enabled")
 
     try:
         if shutil.which("recoll") is None:
