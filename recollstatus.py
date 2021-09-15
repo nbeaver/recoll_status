@@ -314,7 +314,7 @@ def get_default_recoll_dir():
     return None
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(
         description="Display status of recollindex.")
     parser.add_argument(
@@ -356,3 +356,6 @@ if __name__ == "__main__":
         pass
 
     print(recollstatus(args.recoll_dir))
+
+if __name__ == "__main__":
+    main()
