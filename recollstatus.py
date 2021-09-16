@@ -310,8 +310,7 @@ def get_default_recoll_dir():
         else:
             logger.debug("Windows path does not exist: '{}'".format(windows_path))
 
-    logger.warning("Could not find recoll directory in default location.")
-    return None
+    raise FileNotFoundError("Could not find recoll directory in default location.")
 
 
 def main():
