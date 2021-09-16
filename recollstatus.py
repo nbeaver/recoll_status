@@ -351,7 +351,9 @@ def main():
 
     # Need to do this after logger is set up.
     if args.recoll_dir is None:
-        args.recoll_dir = get_default_recoll_dir()
+        recoll_dir = get_default_recoll_dir()
+    else:
+        recoll_dir = args.recoll_dir
 
     try:
         if shutil.which("recoll") is None:
@@ -361,7 +363,7 @@ def main():
         # shutil.which() is only in python 3.3 and later.
         pass
 
-    print(recollstatus(args.recoll_dir))
+    print(recollstatus(recoll_dir))
 
 if __name__ == "__main__":
     main()
