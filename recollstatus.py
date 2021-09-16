@@ -31,7 +31,7 @@ def recollindex_running(pid_filepath):
     try:
         recoll_pid = int(recoll_pid_string)
     except ValueError:
-        logger.error("Not a valid process ID: {}\n".format(recoll_pid_string))
+        logger.error("Not a valid process ID: {}".format(recoll_pid_string))
         raise
     logger.info("recoll_pid = '{}'".format(recoll_pid))
 
@@ -45,12 +45,12 @@ def recollindex_running(pid_filepath):
         logger.debug("e.errno = '{}'".format(e.errno))
         if e.errno == errno.ESRCH:
             logger.warning(
-                "'{}' has process ID '{}', but no process with that ID is running.\n".
+                "'{}' has process ID '{}', but no process with that ID is running.".
                 format(pid_filepath, recoll_pid))
             return False
         elif e.errno == errno.EPERM:
             logger.warning(
-                "'{}' has process ID '{}', but that process is running under a different user.\n".
+                "'{}' has process ID '{}', but that process is running under a different user.".
                 format(pid_filepath, recoll_pid))
             return True
         else:
