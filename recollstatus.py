@@ -322,7 +322,7 @@ def main():
         "-d",
         "--recoll-dir",
         type=readable_directory,
-        default=get_default_recoll_dir(),
+        default=None,
         help="Recoll directory",
     )
     parser.add_argument(
@@ -343,8 +343,15 @@ def main():
         const=logging.DEBUG,
     )
     args = parser.parse_args()
+    # Initialize to avoid this error:
+    # "No handlers could be found for logger"
+    logging.basicConfig()
     logger = logging.getLogger('recollstatus')
     logger.setLevel(args.loglevel)
+
+    # Need to do this after logger is set up.
+    if args.recoll_dir is None:
+        args.recoll_dir = get_default_recoll_dir()
 
     try:
         if shutil.which("recoll") is None:
