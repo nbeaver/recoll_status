@@ -314,7 +314,6 @@ def get_default_recoll_dir():
 
 
 def main():
-    global logger
     parser = argparse.ArgumentParser(
         description="Display status of recollindex.")
     parser.add_argument(
