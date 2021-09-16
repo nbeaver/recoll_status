@@ -8,7 +8,7 @@ import datetime
 import collections
 import argparse
 import logging
-
+logger = logging.getLogger(__name__)
 
 def recollindex_running(pid_filepath):
     # Example PID file path: ~/.recoll/index.pid
@@ -345,7 +345,6 @@ def main():
     # Initialize to avoid this error:
     # "No handlers could be found for logger"
     logging.basicConfig()
-    logger = logging.getLogger('recollstatus')
     logger.setLevel(args.loglevel)
 
     # Need to do this after logger is set up.

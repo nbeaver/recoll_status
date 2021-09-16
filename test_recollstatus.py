@@ -2,8 +2,9 @@
 import unittest
 import recollstatus
 import os
-import logging
 import io
+import logging
+logger = logging.getLogger(__name__)
 
 class recollstatusTest(unittest.TestCase):
     def test_parsing(self):
