@@ -189,7 +189,7 @@ def format_idxstatus(idxstatus):
             try:
                 phase_name_old = DbIxStatus_before_v1p30p1[phase_number]
             except KeyError:
-                phasen_name_old = None
+                phase_name_old = None
             else:
                 raise
             if phase_name == phase_name_old:
