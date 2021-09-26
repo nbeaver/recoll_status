@@ -23,7 +23,13 @@ def recollindex_running(pid_filepath):
                 "Could not open 'index.pid' at '{}'\n".format(pid_filepath))
         raise
 
-    recoll_pid_string = pid_file.read()
+    try :
+        recoll_pid_string = pid_file.read()
+    except Exception as e:
+        logger.error(
+            "Could not read 'index.pid' at '{}'\n".format(pid_filepath))
+        raise
+
     logger.debug("recoll_pid_string = '{}'".format(recoll_pid_string))
     if recoll_pid_string == "":
         return False
@@ -220,7 +226,15 @@ def format_idxstatus(idxstatus):
 
 def recollstatus(recoll_dir):
     status = []
-    if recollindex_running(os.path.join(recoll_dir, "index.pid")):
+    try :
+        is_running = recollindex_running(os.path.join(recoll_dir, "index.pid"))
+    except Exception as e :
+        sys.stdout.error(e.message, e.args)
+        is_running = None
+
+    if is_running is None:
+        status.append("not sure if recollindex is running or not")
+    elif is_running:
         status.append("index.pid matches running process")
         recollindex_start, then = last_started(
             os.path.join(recoll_dir, "xapiandb", "flintlock"))
@@ -229,7 +243,6 @@ def recollstatus(recoll_dir):
             recollindex_start.ctime()))
         status.append(" recollindex has been running for: {}".format(
             recollindex_elapsed_time))
-
     else:
         status.append("index.pid does not match a running process")
         recollindex_start, then = last_started(
