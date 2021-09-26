@@ -230,7 +230,7 @@ def recollstatus(recoll_dir):
     try :
         is_running = recollindex_running(os.path.join(recoll_dir, "index.pid"))
     except Exception as e :
-        sys.stderr.write(e.message, e.args)
+        print(e, file=sys.stderr)
         is_running = None
 
     if is_running is None:
