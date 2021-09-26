@@ -8,6 +8,7 @@ import datetime
 import collections
 import argparse
 import logging
+import sys
 logger = logging.getLogger(__name__)
 
 def recollindex_running(pid_filepath):
