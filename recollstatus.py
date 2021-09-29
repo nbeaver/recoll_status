@@ -189,7 +189,7 @@ def format_idxstatus(idxstatus):
             try:
                 phase_name_old = DbIxStatus_before_v1p30p1[phase_number]
             except Exception as e:
-                logging.warning("Exception: {} {}".format(e.message))
+                logging.warning("Exception: {}".format(e))
                 phase_name_old = None
 
             if phase_name == phase_name_old:
