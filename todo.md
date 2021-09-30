@@ -15,3 +15,4 @@
     - https://stackoverflow.com/questions/31636884/print-exception-with-stack-trace-to-file
     - https://stackoverflow.com/questions/1508467/log-exception-with-traceback
 - [x] Check under `%LOCALAPPDATA%\Recoll` on Windows via `os.environ['LOCALAPPDATA']`
+- [ ] Add comma (or locale-appropriate) thousand separators in formatting of number of files
