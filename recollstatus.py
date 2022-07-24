@@ -227,7 +227,7 @@ def format_idxstatus(idxstatus):
     return "\n".join(formatted)
 
 
-def recollstatus(recoll_dir):
+def recollstatus(recoll_dir, dbdir=None):
     status = []
     try :
         is_running = recollindex_running(os.path.join(recoll_dir, "index.pid"))
@@ -235,12 +235,16 @@ def recollstatus(recoll_dir):
         print(e, file=sys.stderr)
         is_running = None
 
+    if dbdir is None:
+        flintlock_path = os.path.join(recoll_dir, "xapiandb", "flintlock")
+    else:
+        flintlock_path = os.path.join(dbdir, "flintlock")
+
     if is_running is None:
         status.append("not sure if recollindex is running or not")
     elif is_running:
         status.append("index.pid matches running process")
-        recollindex_start, then = last_started(
-            os.path.join(recoll_dir, "xapiandb", "flintlock"))
+        recollindex_start, then = last_started(flintlock_path)
         recollindex_elapsed_time = then - recollindex_start
         status.append(" recollindex was last started on: {}".format(
             recollindex_start.ctime()))
@@ -248,8 +252,7 @@ def recollstatus(recoll_dir):
             recollindex_elapsed_time))
     else:
         status.append("index.pid does not match a running process")
-        recollindex_start, then = last_started(
-            os.path.join(recoll_dir, "xapiandb", "flintlock"))
+        recollindex_start, then = last_started(flintlock_path)
         time_since_last_started = then - recollindex_start
         recollindex_last_active, then = since_last_active(
             os.path.join(recoll_dir, "idxstatus.txt"))
@@ -340,6 +343,12 @@ def main():
         help="Recoll directory",
     )
     parser.add_argument(
+        "--dbdir",
+        type=readable_directory,
+        default=None,
+        help="Xapian database directory",
+    )
+    parser.add_argument(
         "-v",
         "--verbose",
         help="More verbose logging",
@@ -376,7 +385,7 @@ def main():
         # shutil.which() is only in python 3.3 and later.
         pass
 
-    print(recollstatus(recoll_dir))
+    print(recollstatus(recoll_dir, dbdir=args.dbdir))
 
 if __name__ == "__main__":
     main()
