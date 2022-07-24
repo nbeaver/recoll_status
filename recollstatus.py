@@ -369,7 +369,7 @@ def main():
     args = parser.parse_args()
     # Initialize to avoid this error:
     # "No handlers could be found for logger"
-    logging.basicConfig()
+    logging.basicConfig(level=args.loglevel)
     logger.setLevel(args.loglevel)
 
     # Need to do this after logger is set up.
