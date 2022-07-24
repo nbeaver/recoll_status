@@ -239,6 +239,7 @@ def recollstatus(recoll_dir, dbdir=None):
         flintlock_path = os.path.join(recoll_dir, "xapiandb", "flintlock")
     else:
         flintlock_path = os.path.join(dbdir, "flintlock")
+    logging.info("flintlock_path = '{}'".format(flintlock_path))
 
     if is_running is None:
         status.append("not sure if recollindex is running or not")
